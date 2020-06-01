@@ -30,18 +30,6 @@ public class Question {
         this.questionContent = content;
     }
 
-    /*public String getAnswerContent() {
-        return this.answerContent;
-    }
-    public void setAnswerContent(String answerContent) {
-        this.answerContent = answerContent;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%d. %s\n%s", questionNum, questionContent, answerContent);
-    }*/
-
     public List<Answer> getAnswerList() {
         return answerList;
     }

@@ -1,35 +1,30 @@
 package ru.otus.homework.utils;
 
-import ru.otus.homework.domain.Question;
-import ru.otus.homework.service.QuestionService;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ResourceLoader {
-    private String resourcePath;
-    private QuestionService questionService;
+    private final String resourcePath;
 
-    public ResourceLoader(String resourcePath, QuestionService questionService) {
+    public ResourceLoader(String resourcePath) {
         this.resourcePath = resourcePath;
-        this.questionService = questionService;
     }
 
     /**
-     * Получение данных из CSV-файла. Читает файл по <b>resourcePath</b> и преобразует данные в объекты
-     * @return Лист вопросов
+     * Получение данных из CSV-файла. Читает файл по <b>resourcePath</b> и возвращает строковые данные
+     * @return Лист строк с данными
      */
-    public List<Question> getData() {
+    public List<String> getData() {
         InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
-        List<Question> questions = new ArrayList<>();
+        List<String> rawDataList = new ArrayList<>();
         try(Scanner scanner = new Scanner(inputStream)){
             while (scanner.hasNextLine()) {
-                questions.add(questionService.createQuestion(scanner.nextLine()));
+                rawDataList.add(scanner.nextLine());
             }
         }
-        return questions;
+        return rawDataList;
     }
 
 }

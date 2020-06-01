@@ -16,6 +16,9 @@ public class ResourceLoaderTest {
     @DisplayName("test loading CSV")
     @Test
     void loadCSVTest() {
+        ResourceLoader resourceLoader = new ResourceLoader("test.csv");
+        List<String> loaderData = resourceLoader.getData();
+
         InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("test.csv");
         List<String> records = new ArrayList<>();
         try(Scanner scanner = new Scanner(inputStream)){
@@ -24,8 +27,8 @@ public class ResourceLoaderTest {
             }
         }
 
-        assertEquals(2, records.size());
-        assertEquals("1_QuestionContent", records.get(0));
-        assertEquals("2_QuestionContent2_AnswerContent21_AnswerContent22", records.get(1));
+        assertEquals(loaderData.size(), records.size());
+        assertEquals(loaderData.get(0), records.get(0));
+        assertEquals(loaderData.get(1), records.get(1));
     }
 }

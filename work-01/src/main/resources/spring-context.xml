@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean id="answerDao" class="ru.otus.homework.dao.AnswerDaoImpl">
-    </bean>
+    <util:constant id = "out" static-field="java.lang.System.out"/>
 
-    <bean id="answerService" class="ru.otus.homework.service.AnswerServiceImpl">
-        <constructor-arg name="dao" ref="answerDao"/>
+    <bean id="resourceLoader" class="ru.otus.homework.utils.ResourceLoader">
+        <constructor-arg name="resourcePath" value="questions.csv"></constructor-arg>
     </bean>
 
     <bean id="questionDao" class="ru.otus.homework.dao.QuestionDaoImpl">
+        <constructor-arg name="resourceLoader" ref="resourceLoader"/>
+    </bean>
+
+    <bean id="consoleService" class="ru.otus.homework.service.ConsoleService">
+        <constructor-arg name="outputStream" ref="out" />
     </bean>
 
     <bean id="questionService" class="ru.otus.homework.service.QuestionServiceImpl">
         <constructor-arg name="dao" ref="questionDao"/>
-        <constructor-arg name="answerService" ref="answerService"/>
+        <constructor-arg name="consoleService" ref="consoleService"/>
     </bean>
 
-    <bean id="resourceLoader" class="ru.otus.homework.utils.ResourceLoader">
-        <constructor-arg name="resourcePath" value="questions.csv"></constructor-arg>
-        <constructor-arg name="questionService" ref="questionService"></constructor-arg>
-    </bean>
 </beans>
