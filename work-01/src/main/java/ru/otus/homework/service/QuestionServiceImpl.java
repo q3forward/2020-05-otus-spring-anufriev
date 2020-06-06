@@ -5,15 +5,15 @@ import ru.otus.homework.dao.QuestionDao;
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionDao dao;
-    private final ConsoleService consoleService;
+    private final OutputConsoleService outputConsoleService;
 
-    public QuestionServiceImpl(QuestionDao dao, ConsoleService consoleService) {
+    public QuestionServiceImpl(QuestionDao dao, OutputConsoleService outputConsoleService) {
         this.dao = dao;
-        this.consoleService = consoleService;
+        this.outputConsoleService = outputConsoleService;
     }
 
     @Override
     public void printQuestions() {
-        dao.getQuestions().forEach(consoleService::writeOut);
+        dao.getQuestions().forEach(outputConsoleService::writeOut);
     }
 }

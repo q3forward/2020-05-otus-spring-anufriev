@@ -7,20 +7,20 @@
     <util:constant id = "out" static-field="java.lang.System.out"/>
 
     <bean id="resourceLoader" class="ru.otus.homework.utils.ResourceLoader">
-        <constructor-arg name="resourcePath" value="questions.csv"></constructor-arg>
     </bean>
 
     <bean id="questionDao" class="ru.otus.homework.dao.QuestionDaoImpl">
         <constructor-arg name="resourceLoader" ref="resourceLoader"/>
+        <constructor-arg name="resourcePath" value="questions.csv"></constructor-arg>
     </bean>
 
-    <bean id="consoleService" class="ru.otus.homework.service.ConsoleService">
+    <bean id="outputConsoleService" class="ru.otus.homework.service.OutputConsoleService">
         <constructor-arg name="outputStream" ref="out" />
     </bean>
 
     <bean id="questionService" class="ru.otus.homework.service.QuestionServiceImpl">
         <constructor-arg name="dao" ref="questionDao"/>
-        <constructor-arg name="consoleService" ref="consoleService"/>
+        <constructor-arg name="outputConsoleService" ref="outputConsoleService"/>
     </bean>
 
 </beans>

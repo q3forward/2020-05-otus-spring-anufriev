@@ -16,8 +16,8 @@ public class ResourceLoaderTest {
     @DisplayName("test loading CSV")
     @Test
     void loadCSVTest() {
-        ResourceLoader resourceLoader = new ResourceLoader("test.csv");
-        List<String> loaderData = resourceLoader.getData();
+        ResourceLoader resourceLoader = new ResourceLoader();
+        List<String> loaderData = resourceLoader.getData("test.csv");
 
         InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("test.csv");
         List<String> records = new ArrayList<>();

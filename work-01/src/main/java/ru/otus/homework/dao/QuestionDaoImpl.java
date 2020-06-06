@@ -12,19 +12,25 @@ import java.util.stream.Collectors;
 public class QuestionDaoImpl implements QuestionDao {
 
     private final ResourceLoader resourceLoader;
+    private final String resourcePath;
 
-    public QuestionDaoImpl(ResourceLoader resourceLoader) {
+    public QuestionDaoImpl(ResourceLoader resourceLoader, String resourcePath) {
         this.resourceLoader = resourceLoader;
+        this.resourcePath = resourcePath;
     }
 
     @Override
     public List<Question> getQuestions() {
-        List<String> rawData = resourceLoader.getData();
+        List<String> rawData = resourceLoader.getData(resourcePath);
         List<Question> questions = new ArrayList<>();
         for (String record: rawData) {
             String[] questionData = record.split("_");
-            List<String> answers = Arrays.asList(Arrays.copyOfRange(questionData,2, questionData.length));
-            questions.add(new Question(Integer.valueOf(questionData[0]), questionData[1], answers.stream().map(Answer::new).collect(Collectors.toList())));
+            try {
+                List<String> answers = Arrays.asList(Arrays.copyOfRange(questionData, 2, questionData.length));
+                questions.add(new Question(Integer.valueOf(questionData[0]), questionData[1], answers.stream().map(Answer::new).collect(Collectors.toList())));
+            } catch (IllegalArgumentException e) {
+                // Nothing to do, skip question
+            }
         }
         return questions;
     }
