@@ -6,25 +6,25 @@ import org.springframework.stereotype.Service;
 import ru.otus.homework.dao.QuestionDao;
 
 @Service
-@PropertySource("classpath:application.properties")
 public class QuestionServiceImpl implements QuestionService {
 
     private final QuestionDao dao;
     private final OutputService outputService;
     private final InputService inputService;
 
-    @Value("${rightAnswer.needForPass}")
     private int countForPass;
     private int rightCounts = 0;
 
-    public QuestionServiceImpl(QuestionDao dao, OutputService outputService, InputService inputService) {
+    public QuestionServiceImpl(QuestionDao dao, OutputService outputService, InputService inputService,
+                               @Value("${rightAnswer.need-for-pass}") int countForPass) {
         this.dao = dao;
         this.outputService = outputService;
         this.inputService = inputService;
+        this.countForPass = countForPass;
     }
 
     @Override
-    public void printQuestions() {
+    public void runTest() {
         outputService.writeOut("What is your name?");
         String studentName = inputService.writeIn();
 

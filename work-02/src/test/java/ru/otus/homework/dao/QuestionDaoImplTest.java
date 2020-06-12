@@ -6,11 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.otus.homework.domain.Answer;
 import ru.otus.homework.domain.Question;
 import ru.otus.homework.utils.ResourceLoader;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,7 +24,7 @@ public class QuestionDaoImplTest {
 
     @Mock
     private ResourceLoader resourceLoader;
-    private String resourcePath = "test.csv";
+    private final String resourcePath = "test.csv";
 
     private QuestionDaoImpl questionDaoImpl;
 

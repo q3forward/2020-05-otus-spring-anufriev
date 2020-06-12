@@ -19,9 +19,11 @@ public class ResourceLoader {
     public List<String> getData(String resourcePath) {
         InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream(resourcePath);
         List<String> rawDataList = new ArrayList<>();
-        try(Scanner scanner = new Scanner(inputStream)){
-            while (scanner.hasNextLine()) {
-                rawDataList.add(scanner.nextLine());
+        if (inputStream!=null) {
+            try (Scanner scanner = new Scanner(inputStream)) {
+                while (scanner.hasNextLine()) {
+                    rawDataList.add(scanner.nextLine());
+                }
             }
         }
         return rawDataList;
