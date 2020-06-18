@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.otus.homework.domain.Question;
-import ru.otus.homework.service.OutputConsoleService;
-import ru.otus.homework.service.OutputService;
 import ru.otus.homework.utils.ResourceLoader;
 
 import java.util.Arrays;
@@ -27,7 +25,6 @@ public class QuestionDaoImplTest {
     @Mock
     private ResourceLoader resourceLoader;
     private static final String RESOURCE_PATH = "test.csv";
-    private OutputService outputService;
 
     private QuestionDaoImpl questionDaoImpl;
 
@@ -35,7 +32,7 @@ public class QuestionDaoImplTest {
     void setUp() {
         given(resourceLoader.getData(any()))
                 .willReturn(Arrays.asList("1_Question content_Right answer_Answer content"));
-        questionDaoImpl = new QuestionDaoImpl(resourceLoader, RESOURCE_PATH, outputService);
+        questionDaoImpl = new QuestionDaoImpl(resourceLoader, RESOURCE_PATH);
     }
 
     @DisplayName("test getQuestions")
