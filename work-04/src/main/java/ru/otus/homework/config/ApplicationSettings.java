@@ -14,6 +14,7 @@ public class ApplicationSettings {
     private String csvName;
     private int rightAnswerNeedForPass;
     private Locale locale;
+    private String csvExt;
 
     public String getCsvName() {
         return csvName;
@@ -37,5 +38,13 @@ public class ApplicationSettings {
 
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public String getCsvExt() {
+        return csvExt;
+    }
+
+    public void setCsvExt(String csvExt) {
+        this.csvExt = csvExt;
     }
 }

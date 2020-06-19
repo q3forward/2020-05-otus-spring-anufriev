@@ -1,8 +1,8 @@
-csv-name: questions
+csv-name: test
 csv-ext: .csv
 right-answer-need-for-pass: 4
 
-locale: ru
+locale: en
 
 logging:
   level:

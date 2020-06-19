@@ -17,9 +17,9 @@ public class ResourceLoaderTest {
     @Test
     void loadCSVTest() {
         ResourceLoader resourceLoader = new ResourceLoader();
-        List<String> loaderData = resourceLoader.getData("test.csv");
+        List<String> loaderData = resourceLoader.getData("test_en.csv");
 
-        InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("test.csv");
+        InputStream inputStream = ClassLoader.getSystemClassLoader().getResourceAsStream("test_en.csv");
         List<String> records = new ArrayList<>();
         try(Scanner scanner = new Scanner(inputStream)){
             while (scanner.hasNextLine()) {

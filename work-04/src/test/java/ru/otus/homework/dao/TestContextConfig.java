@@ -8,14 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @SpringBootConfiguration
-@ComponentScan({"ru.otus.homework.dao", "ru.otus.homework.service", "ru.otus.homework.utils"})
+@ComponentScan({"ru.otus.homework.dao"})
 public class TestContextConfig {
 
-    @Bean
-    public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
-        ms.setBasename("classpath:/i18n/test-bundle");
-        ms.setDefaultEncoding("UTF-8");
-        return ms;
-    }
 }
