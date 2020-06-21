@@ -1,0 +1,53 @@
+package ru.otus.homework.domain;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Question {
+
+    private Integer questionNum;
+    private String questionContent;
+    private List<Answer> answerList;
+    private String rightAnswer;
+
+    public Question(Integer num, String questionContent, String rightAnswer, List<Answer> answerList) {
+        this.questionNum = num;
+        this.questionContent = questionContent;
+        this.rightAnswer = rightAnswer;
+        this.answerList = new ArrayList<>(answerList);
+    }
+
+    public int getQuestionNum() {
+        return questionNum;
+    }
+    public void setQuestionNum(Integer questionNum) {
+        this.questionNum = questionNum;
+    }
+
+    public String getQuestionContent() {
+        return questionContent;
+    }
+    public void setQuestionContent(String content) {
+        this.questionContent = content;
+    }
+
+    public List<Answer> getAnswerList() {
+        return answerList;
+    }
+    public void setAnswerList(List<Answer> answerList) {
+        this.answerList = new ArrayList<>(answerList);
+    }
+
+    public String getRightAnswer() {
+        return rightAnswer;
+    }
+    public void setRightAnswer(String rightAnswer) {
+        this.rightAnswer = rightAnswer;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%d. %s\n%s", questionNum, questionContent, answerList.stream().map(Answer::getAnswerContent).collect(Collectors.joining("\t\t")));
+    }
+}

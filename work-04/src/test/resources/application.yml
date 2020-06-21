@@ -1,0 +1,13 @@
+csv-name: test
+csv-ext: .csv
+right-answer-need-for-pass: 4
+
+locale: en
+
+logging:
+  level:
+    root: DEBUG
+
+spring:
+  messages:
+    encoding: UTF-8

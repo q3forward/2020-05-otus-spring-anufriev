@@ -3,41 +3,54 @@ package ru.otus.homework.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.otus.homework.config.ApplicationSettings;
 import ru.otus.homework.domain.Question;
 import ru.otus.homework.utils.ResourceLoader;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("QuestionDaoImpl Class")
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class QuestionDaoImplTest {
+    private static final String RESOURCE_NAME = "test";
+    private static final String RESOURCE_EXT = ".csv";
 
-    @Mock
+    @MockBean
     private ResourceLoader resourceLoader;
-    private static final String RESOURCE_PATH = "test.csv";
 
+    @MockBean
+    private ApplicationSettings appSettings;
+
+    @Autowired
     private QuestionDaoImpl questionDaoImpl;
 
     @BeforeEach
     void setUp() {
         given(resourceLoader.getData(any()))
-                .willReturn(Arrays.asList("1_Question content_Right answer_Answer content"));
-        questionDaoImpl = new QuestionDaoImpl(resourceLoader, RESOURCE_PATH);
+                .willReturn(Arrays.asList("1_tst-question_tst-rightAnswer_tst-answer-content"));
+        given(appSettings.getCsvName())
+                .willReturn(RESOURCE_NAME);
+        given(appSettings.getCsvExt())
+                .willReturn(RESOURCE_EXT);
     }
 
     @DisplayName("test getQuestions")
     @Test
-    void getQuestionsTest() {
+    void getQuestionsEnTest() {
+        given(appSettings.getLocale())
+                .willReturn(Locale.ENGLISH);
+
         List<Question> questions = questionDaoImpl.getQuestions();
         assertThat(questions)
                 .isNotNull()
@@ -47,10 +60,11 @@ public class QuestionDaoImplTest {
         Question question = questions.get(0);
         assertAll("",
                 () -> assertEquals(1, question.getQuestionNum()),
-                () -> assertEquals("Question content", question.getQuestionContent()),
-                () -> assertEquals("Right answer", question.getRightAnswer()),
+                () -> assertEquals("tst-question", question.getQuestionContent()),
+                () -> assertEquals("tst-rightAnswer", question.getRightAnswer()),
                 () -> assertEquals(1, question.getAnswerList().size()),
-                () -> assertEquals("Answer content", question.getAnswerList().get(0).getAnswerContent())
+                () -> assertEquals("tst-answer-content", question.getAnswerList().get(0).getAnswerContent())
         );
     }
+
 }
