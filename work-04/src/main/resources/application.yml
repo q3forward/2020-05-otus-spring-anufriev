@@ -1,0 +1,13 @@
+csv-name: questions
+csv-ext: .csv
+right-answer-need-for-pass: 4
+
+locale: ru
+
+logging:
+  level:
+    root: INFO
+
+spring:
+  messages:
+    encoding: UTF-8
