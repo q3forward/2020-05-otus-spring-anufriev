@@ -11,4 +11,5 @@ public interface BookDao {
     Book getById(long id);
     List<Book> getAll();
     void deleteById(long id);
+    boolean existsById(long id);
 }

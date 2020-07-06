@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("Тест DAO для работы с книгами")
 @JdbcTest
@@ -67,5 +68,11 @@ public class BookDaoJdbcTest {
         dao.deleteById(3L);
         Book book = dao.getById(3L);
         assertNull(book);
+    }
+
+    @DisplayName("проверка существования по Id")
+    @Test
+    void existsByIdTest() {
+        assertTrue(dao.existsById(1L));
     }
 }

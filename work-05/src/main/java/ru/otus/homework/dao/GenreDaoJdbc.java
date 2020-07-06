@@ -36,7 +36,7 @@ public class GenreDaoJdbc implements GenreDao {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("name", genre.getName());
         jdbcOperations.update("insert into genres (name) values (:name)", params, keyHolder);
-        return (long) keyHolder.getKey();
+        return keyHolder.getKey().longValue();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class GenreDaoJdbc implements GenreDao {
         Map<String, Object> params = Collections.singletonMap("name", name.toLowerCase());
         try {
             return jdbcOperations.queryForObject(
-                    "select * from genres where lower(name) = :name", params, new GenreMapper()
+                "select * from genres where lower(name) = :name", params, new GenreMapper()
             );
         } catch(EmptyResultDataAccessException e) {
             return null;

@@ -49,23 +49,10 @@ public class BookServiceImpl implements BookService{
                 book.setTitle(bookTitle);
             }
             if (!authorName.equals("")) {
-                List<Author> authors = authorService.findByName(authorName);
-
-                Author author = null;
-                if (authors.isEmpty()) {
-                    author = authorService.add(authorName);
-                } else {
-                    author = authors.get(0);
-                }
-                book.setAuthor(author);
+                setAuthorForBook(book, authorName);
             }
-
             if (!genreName.equals("")) {
-                Genre genre = genreService.findByName(genreName);
-                if (genre==null) {
-                    genre = genreService.add(genreName);
-                }
-                book.setGenre(genre);
+                setGenreForBook(book, genreName);
             }
             bookDao.update(book);
         } else {
@@ -75,8 +62,7 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void delete(long bookId) throws BookNotFoundException {
-        Book book = bookDao.getById(bookId);
-        if (book!=null) {
+        if (bookDao.existsById(bookId)) {
             bookDao.deleteById(bookId);
         } else {
             throw new BookNotFoundException("Книга по указанному Id не найдена");
@@ -91,5 +77,25 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book getById(long bookId) {
         return bookDao.getById(bookId);
+    }
+
+    private void setAuthorForBook(Book book, String authorName) {
+        List<Author> authors = authorService.findByName(authorName);
+
+        Author author = null;
+        if (authors.isEmpty()) {
+            author = authorService.add(authorName);
+        } else {
+            author = authors.get(0);
+        }
+        book.setAuthor(author);
+    }
+
+    private void setGenreForBook(Book book, String genreName) {
+        Genre genre = genreService.findByName(genreName);
+        if (genre==null) {
+            genre = genreService.add(genreName);
+        }
+        book.setGenre(genre);
     }
 }

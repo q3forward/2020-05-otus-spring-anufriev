@@ -113,7 +113,7 @@ public class BookServiceImplTest {
     @DisplayName("тест успешного удаления")
     void deleteTest() throws BookNotFoundException {
         Book book = new Book(1L, "Test Book", author, genre);
-        given(bookDao.getById(anyLong())).willReturn(book);
+        given(bookDao.existsById(anyLong())).willReturn(true);
         long id = 1;
         service.delete(id);
 
@@ -123,7 +123,7 @@ public class BookServiceImplTest {
     @Test
     @DisplayName("тест исключения при удалении, если книга не найдена")
     void deleteExceptionTest() throws BookNotFoundException {
-        given(bookDao.getById(anyLong())).willReturn(null);
+        given(bookDao.existsById(anyLong())).willReturn(false);
 
         Assertions.assertThrows(BookNotFoundException.class, () -> service.delete(1));
     }

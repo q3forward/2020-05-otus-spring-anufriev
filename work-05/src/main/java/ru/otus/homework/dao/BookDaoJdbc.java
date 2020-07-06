@@ -40,16 +40,17 @@ public class BookDaoJdbc implements BookDao {
         params.addValue("genre_id", book.getGenre().getId());
         params.addValue("author_id", book.getAuthor().getId());
         jdbcOperations.update("insert into books (title, genre_id, author_id) values (:title, :genre_id, :author_id)", params, keyHolder);
-        return (long) keyHolder.getKey();
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public void update(Book book) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", book.getId());
-        params.put("title", book.getTitle());
-        params.put("genre_id", book.getGenre().getId());
-        params.put("author_id", book.getAuthor().getId());
+        Map<String, Object> params = Map.of(
+            "id", book.getId(),
+            "title", book.getTitle(),
+            "genre_id", book.getGenre().getId(),
+            "author_id", book.getAuthor().getId()
+        );
         jdbcOperations.update("update books set title=:title, genre_id=:genre_id, author_id=:author_id where id=:id", params);
     }
 
@@ -81,6 +82,13 @@ public class BookDaoJdbc implements BookDao {
     public void deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         jdbcOperations.update("delete from books where id= :id", params);
+    }
+
+    @Override
+    public boolean existsById(long id) {
+        Map<String, Object> params = Collections.singletonMap("id", id);
+        Integer cnt = jdbcOperations.queryForObject("select count(*) from books where id=:id", params, Integer.class);
+        return cnt !=null && cnt>0;
     }
 
     private static class BookMapper implements RowMapper<Book> {

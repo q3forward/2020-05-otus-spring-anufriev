@@ -33,18 +33,17 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public long insert(Author author) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        Map<String, Object> params = Collections.singletonMap("name", author.getName());
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("name", author.getName());
         jdbcOperations.update("insert into authors (name) values (:name)", parameters, keyHolder);
-        return (long) keyHolder.getKey();
+        return keyHolder.getKey().longValue();
     }
 
     @Override
     public void update(Author author) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("id", author.getId());
-        params.put("name", author.getName());
+        Map<String, Object> params = Map.of(
+                "id", author.getId(),
+                "name", author.getName());
         jdbcOperations.update("update authors set name=:name where id=:id", params);
     }
 

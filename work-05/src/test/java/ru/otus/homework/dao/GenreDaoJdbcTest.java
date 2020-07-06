@@ -55,7 +55,7 @@ public class GenreDaoJdbcTest {
     @Test
     void getAllTest() {
         List<Genre> genreList = dao.getAll();
-        assertThat(3).isEqualTo(genreList.size());
+        assertThat(genreList.size()).isEqualTo(3);
         assertThat(genreList.get(0)).hasFieldOrPropertyWithValue("id", 1L).hasFieldOrPropertyWithValue("name", "Test genre");
         assertThat(genreList.get(1)).hasFieldOrPropertyWithValue("id", 2L).hasFieldOrPropertyWithValue("name", "Test genre 2");
         assertThat(genreList.get(2)).hasFieldOrPropertyWithValue("id", 3L).hasFieldOrPropertyWithValue("name", "Test genre 3");
