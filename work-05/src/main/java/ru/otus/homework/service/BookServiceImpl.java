@@ -24,19 +24,10 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Book add(String bookTitle, String authorName, String genreName) {
-        List<Author> authors = authorService.findByName(authorName);
-        Author author = null;
-        if (authors.isEmpty()) {
-            author = authorService.add(authorName);
-        } else {
-            author = authors.get(0);
-        }
-
-        Genre genre = genreService.findByName(genreName);
-        if (genre==null) {
-            genre = genreService.add(genreName);
-        }
-        Book book = new Book(bookTitle, author, genre);
+        Book book = new Book();
+        book.setTitle(bookTitle);
+        setAuthorForBook(book, authorName);
+        setGenreForBook(book, genreName);
         book.setId(bookDao.insert(book));
         return book;
     }
@@ -48,12 +39,8 @@ public class BookServiceImpl implements BookService{
             if (!bookTitle.equals("")) {
                 book.setTitle(bookTitle);
             }
-            if (!authorName.equals("")) {
-                setAuthorForBook(book, authorName);
-            }
-            if (!genreName.equals("")) {
-                setGenreForBook(book, genreName);
-            }
+            setAuthorForBook(book, authorName);
+            setGenreForBook(book, genreName);
             bookDao.update(book);
         } else {
             throw new BookNotFoundException("Книга по указанному Id не найдена");
@@ -80,22 +67,26 @@ public class BookServiceImpl implements BookService{
     }
 
     private void setAuthorForBook(Book book, String authorName) {
-        List<Author> authors = authorService.findByName(authorName);
+        if (!authorName.equals("")) {
+            List<Author> authors = authorService.findByName(authorName);
 
-        Author author = null;
-        if (authors.isEmpty()) {
-            author = authorService.add(authorName);
-        } else {
-            author = authors.get(0);
+            Author author = null;
+            if (authors.isEmpty()) {
+                author = authorService.add(authorName);
+            } else {
+                author = authors.get(0);
+            }
+            book.setAuthor(author);
         }
-        book.setAuthor(author);
     }
 
     private void setGenreForBook(Book book, String genreName) {
-        Genre genre = genreService.findByName(genreName);
-        if (genre==null) {
-            genre = genreService.add(genreName);
+        if (!genreName.equals("")) {
+            Genre genre = genreService.findByName(genreName);
+            if (genre == null) {
+                genre = genreService.add(genreName);
+            }
+            book.setGenre(genre);
         }
-        book.setGenre(genre);
     }
 }
