@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    initialization-mode: always
+  liquibase:
+    enabled: true
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      dda-auto: none
+    show-sql: true
