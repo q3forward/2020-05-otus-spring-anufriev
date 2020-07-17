@@ -1,6 +1,7 @@
 package ru.otus.homework.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Comment;
 
 import javax.persistence.*;
@@ -31,7 +32,7 @@ public class CommentDaoImpl implements CommentDao {
     @Override
     public Optional<Comment> getById(long id) {
         TypedQuery<Comment> query = em.createQuery(
-                "select c from Comment c where c.id = :id", Comment.class);
+                "select c from Comment c join fetch c.book b join fetch b.author join fetch b.genre where c.id = :id", Comment.class);
         query.setParameter("id", id);
         try {
             return Optional.of(query.getSingleResult());
@@ -42,12 +43,12 @@ public class CommentDaoImpl implements CommentDao {
 
     @Override
     public List<Comment> getAll() {
-        return em.createQuery("select c from Comment c", Comment.class).getResultList();
+        return em.createQuery("select c from Comment c join fetch c.book b join fetch b.genre join fetch b.author", Comment.class).getResultList();
     }
 
     @Override
     public List<Comment> getCommentsByBookId(long bookId) {
-        TypedQuery<Comment> query = em.createQuery("select c from Comment c join c.book b where b.id=:bookId", Comment.class);
+        TypedQuery<Comment> query = em.createQuery("select c from Comment c join fetch c.book b where b.id=:bookId", Comment.class);
         query.setParameter("bookId", bookId);
         return query.getResultList();
     }

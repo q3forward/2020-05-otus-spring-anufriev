@@ -29,14 +29,7 @@ public class AuthorDaoImpl implements AuthorDao {
 
     @Override
     public Optional<Author> getById(long id) {
-        TypedQuery<Author> query = em.createQuery(
-                "select a from Author a where a.id = :id", Author.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(Author.class, id));
     }
 
     @Override

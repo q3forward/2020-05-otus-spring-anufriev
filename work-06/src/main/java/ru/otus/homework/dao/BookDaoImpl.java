@@ -1,6 +1,7 @@
 package ru.otus.homework.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
 
 import javax.persistence.*;
@@ -29,19 +30,12 @@ public class BookDaoImpl implements BookDao {
 
     @Override
     public Optional<Book> getById(long id) {
-        TypedQuery<Book> query = em.createQuery(
-                "select b from Book b where b.id = :id", Book.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(Book.class, id));
     }
 
     @Override
     public List<Book> getAll() {
-        return em.createQuery("select b from Book b", Book.class).getResultList();
+        return em.createQuery("select b from Book b join fetch b.author join fetch b.genre", Book.class).getResultList();
     }
 
     @Override

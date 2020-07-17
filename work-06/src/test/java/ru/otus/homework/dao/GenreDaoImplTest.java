@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.homework.domain.Genre;
 
@@ -19,6 +20,8 @@ class GenreDaoImplTest {
 
     @Autowired
     private GenreDaoImpl dao;
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("проверка корректности количества")
     @Test
@@ -32,7 +35,7 @@ class GenreDaoImplTest {
     void saveTest() {
         Genre expected = new Genre("Added genre");
         dao.save(expected);
-        Genre actual = dao.getById(expected.getId()).orElse(null);
+        Genre actual = em.find(Genre.class,expected.getId());
         assertThat(actual).isNotNull().isEqualToComparingFieldByField(expected);
     }
 
@@ -64,7 +67,7 @@ class GenreDaoImplTest {
     @Test
     void deleteByIdTest() {
         dao.deleteById(3L);
-        Genre genre = dao.getById(3L).orElse(null);
+        Genre genre = em.find(Genre.class, 3L);
         assertNull(genre);
     }
 }

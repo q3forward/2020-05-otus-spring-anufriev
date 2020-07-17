@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
@@ -19,16 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Тест DAO для работы с комментариями")
 @DataJpaTest
 @Import({CommentDaoImpl.class})
-public class CommentDaoImplTest {
+class CommentDaoImplTest {
 
     @Autowired
     private CommentDaoImpl dao;
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("проверка корректности количества")
     @Test
     void countTest() {
         long count = dao.count();
-        assertThat(3).isEqualTo(count);
+        assertThat(count).isEqualTo(3);
     }
 
     @DisplayName("проверка корректности добавления")
@@ -39,7 +42,7 @@ public class CommentDaoImplTest {
         Book book = new Book(1,"Test book", author, genre);
         Comment expected = new Comment("Comment text", book);
         dao.save(expected);
-        Comment actual = dao.getById(expected.getId()).orElse(null);
+        Comment actual = em.find(Comment.class, expected.getId());
         assertThat(actual).isNotNull().isEqualToComparingOnlyGivenFields(expected, "id", "text");
         assertThat(actual.getBook()).isEqualToComparingFieldByField(expected.getBook());
     }
@@ -52,9 +55,9 @@ public class CommentDaoImplTest {
         Book book = new Book(1,"Book title", author, genre);
         Comment expected = new Comment(2,"Updated text", book);
         dao.save(expected);
-        Comment actual = dao.getById(expected.getId()).orElse(null);
+        Comment actual = em.find(Comment.class, expected.getId());
         assertThat(actual).isNotNull().isEqualToComparingOnlyGivenFields(expected, "id", "text");
-        assertThat(actual.getBook()).isEqualToComparingFieldByField(expected.getBook());
+        assertThat(actual.getBook()).isEqualToIgnoringGivenFields(expected.getBook(), "$$_hibernate_interceptor");
     }
 
     @DisplayName("проверка корректности получения по Id")
@@ -69,7 +72,7 @@ public class CommentDaoImplTest {
     @Test
     void getAllTest() {
         List<Comment> commentList = dao.getAll();
-        assertThat(3).isEqualTo(commentList.size());
+        assertThat(commentList.size()).isEqualTo(3);
         assertThat(commentList.get(0)).hasFieldOrPropertyWithValue("id", 1L).hasFieldOrPropertyWithValue("text", "Comment");
         assertThat(commentList.get(1)).hasFieldOrPropertyWithValue("id", 2L).hasFieldOrPropertyWithValue("text", "Comment 2");
         assertThat(commentList.get(2)).hasFieldOrPropertyWithValue("id", 3L).hasFieldOrPropertyWithValue("text", "Comment 3");
@@ -79,7 +82,7 @@ public class CommentDaoImplTest {
     @Test
     void deleteByIdTest() {
         dao.deleteById(3L);
-        Comment comment = dao.getById(3L).orElse(null);
+        Comment comment = em.find(Comment.class, 3L);
         assertNull(comment);
     }
 

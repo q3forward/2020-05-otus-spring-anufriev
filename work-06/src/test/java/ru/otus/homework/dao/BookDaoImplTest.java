@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
@@ -22,6 +23,8 @@ public class BookDaoImplTest {
 
     @Autowired
     private BookDaoImpl dao;
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("проверка корректности количества")
     @Test
@@ -37,7 +40,7 @@ public class BookDaoImplTest {
         Genre genre = new Genre(1,"Test genre");
         Book expected = new Book("Added book", author, genre);
         dao.save(expected);
-        Book actual = dao.getById(expected.getId()).orElse(null);
+        Book actual = em.find(Book.class,expected.getId());
         assertThat(actual).isNotNull().isEqualToComparingOnlyGivenFields(expected, "id", "title");
         assertThat(actual.getAuthor()).isEqualToComparingFieldByField(expected.getAuthor());
         assertThat(actual.getGenre()).isEqualToComparingFieldByField(expected.getGenre());
@@ -65,7 +68,7 @@ public class BookDaoImplTest {
     @Test
     void deleteByIdTest() {
         dao.deleteById(3L);
-        Book book = dao.getById(3L).orElse(null);
+        Book book = em.find(Book.class, 3L);
         assertNull(book);
     }
 

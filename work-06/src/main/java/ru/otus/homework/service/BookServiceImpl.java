@@ -1,13 +1,14 @@
 package ru.otus.homework.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.dao.BookDao;
 import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Genre;
 import ru.otus.homework.utils.exception.BookNotFoundException;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -61,14 +62,16 @@ public class BookServiceImpl implements BookService{
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Book> getAll() {
         return bookDao.getAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Book getById(long bookId) {
-        return bookDao.getById(bookId).get();
+        return bookDao.getById(bookId).orElse(null);
     }
 
     private void setAuthorForBook(Book book, String authorName) {

@@ -1,6 +1,7 @@
 package ru.otus.homework.dao;
 
 import org.springframework.stereotype.Repository;
+import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Genre;
 
 import javax.persistence.*;
@@ -29,14 +30,7 @@ public class GenreDaoImpl implements GenreDao {
 
     @Override
     public Optional<Genre> getById(long id) {
-        TypedQuery<Genre> query = em.createQuery(
-                "select g from Genre g where g.id = :id", Genre.class);
-        query.setParameter("id", id);
-        try {
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return Optional.ofNullable(em.find(Genre.class, id));
     }
 
     @Override

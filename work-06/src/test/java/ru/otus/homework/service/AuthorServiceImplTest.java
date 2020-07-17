@@ -35,8 +35,7 @@ class AuthorServiceImplTest {
         given(authorDao.getById(anyLong())).willReturn(author);
 
         Optional<Author> actual = service.findById(1L);
-        assertThat(actual).isNotNull();
-        assertThat(actual.get()).isEqualToComparingFieldByField(author.get());
+        assertThat(actual).isNotEmpty().get().isEqualToComparingFieldByField(author.get());
     }
 
     @Test

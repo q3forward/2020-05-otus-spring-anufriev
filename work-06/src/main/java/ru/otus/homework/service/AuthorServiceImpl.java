@@ -1,10 +1,11 @@
 package ru.otus.homework.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.dao.AuthorDao;
 import ru.otus.homework.domain.Author;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -23,16 +24,19 @@ public class AuthorServiceImpl implements AuthorService{
         return authorDao.save(author);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Author> findById(long authorId) {
         return authorDao.getById(authorId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Author> findByName(String authorName) {
         return authorDao.getByName(authorName);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Author> findAll() {
         return authorDao.getAll();

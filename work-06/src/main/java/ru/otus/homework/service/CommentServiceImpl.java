@@ -1,13 +1,14 @@
 package ru.otus.homework.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.dao.CommentDao;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Comment;
 import ru.otus.homework.utils.exception.BookNotFoundException;
 import ru.otus.homework.utils.exception.CommentNotFoundException;
 
-import javax.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -58,16 +59,19 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Comment> getAll() {
         return commentDao.getAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Comment getById(long commentId) {
-        return commentDao.getById(commentId).get();
+        return commentDao.getById(commentId).orElse(null);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Comment> getBookComments(long bookId) throws BookNotFoundException {
         if (bookId!=0) {

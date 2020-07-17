@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.homework.domain.Author;
 
@@ -19,6 +20,8 @@ public class AuthorDaoImplTest {
 
     @Autowired
     private AuthorDaoImpl dao;
+    @Autowired
+    private TestEntityManager em;
 
     @DisplayName("проверка корректности количества")
     @Test
@@ -32,7 +35,7 @@ public class AuthorDaoImplTest {
     void insertTest() {
         Author expected = new Author("Added author");
         dao.save(expected);
-        Author actual = dao.getById(expected.getId()).orElse(null);
+        Author actual = em.find(Author.class, expected.getId());
         assertThat(actual).isNotNull().isEqualToComparingFieldByField(expected);
     }
 
@@ -65,7 +68,7 @@ public class AuthorDaoImplTest {
     @Test
     void deleteByIdTest() {
         dao.deleteById(3L);
-        Author author = dao.getById(3L).orElse(null);
+        Author author = em.find(Author.class, 3L);
         assertNull(author);
     }
 }

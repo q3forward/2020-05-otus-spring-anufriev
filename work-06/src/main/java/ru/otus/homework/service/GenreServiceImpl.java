@@ -1,10 +1,10 @@
 package ru.otus.homework.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.dao.GenreDao;
 import ru.otus.homework.domain.Genre;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -23,11 +23,13 @@ public class GenreServiceImpl implements GenreService{
         return genreDao.save(genre);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Genre findByName(String name) {
         return genreDao.getByName(name);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Genre> findAll() {
         return genreDao.getAll();
