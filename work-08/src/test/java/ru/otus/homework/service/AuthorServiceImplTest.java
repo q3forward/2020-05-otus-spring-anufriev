@@ -60,7 +60,7 @@ class AuthorServiceImplTest {
         List<Author> expectedList = Arrays.asList(author, author2);
         given(repo.findAll()).willReturn(expectedList);
 
-        Iterable<Author> actualList = service.findAll();
+        List<Author> actualList = service.findAll();
         assertThat(actualList)
                 .isNotNull()
                 .hasSize(2)

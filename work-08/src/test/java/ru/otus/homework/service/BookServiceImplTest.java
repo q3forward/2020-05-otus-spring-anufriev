@@ -66,7 +66,7 @@ class BookServiceImplTest {
         List<Book> expectedList = Arrays.asList(book, book2);
         given(repo.findAll()).willReturn(expectedList);
 
-        Iterable<Book> actualList = service.getAll();
+        List<Book> actualList = service.getAll();
         assertThat(actualList)
                 .isNotNull()
                 .hasSize(2)

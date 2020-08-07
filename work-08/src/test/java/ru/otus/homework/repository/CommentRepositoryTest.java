@@ -32,7 +32,7 @@ class CommentRepositoryTest {
 
     @DisplayName("проверка корректности получения комментариев для определенной книги")
     @Test
-    void getCommentsByBookId() {
+    void getCommentsByBookIdTest() {
         List<Comment> commentList = commentRepo.getCommentsByBookId("1");
 
         assertThat(commentList.size()).isEqualTo(2);
@@ -40,4 +40,12 @@ class CommentRepositoryTest {
         assertThat(commentList.get(1)).hasFieldOrPropertyWithValue("id", "2").hasFieldOrPropertyWithValue("text", "Comment 2");
     }
 
+    @DisplayName("проверка корректности получения ID комментариев для определенной книги")
+    @Test
+    void getCommentIdsByBookIdTest() {
+        List<String> ids = commentRepo.getCommentIdsByBookId("1");
+
+        assertThat(ids.size()).isEqualTo(2);
+        assertThat(ids).containsExactlyInAnyOrder("1","2");
+    }
 }

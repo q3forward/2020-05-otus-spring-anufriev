@@ -68,7 +68,7 @@ class CommentServiceImplTest {
         List<Comment> expectedList = Arrays.asList(comment, comment2);
         given(repo.findAll()).willReturn(expectedList);
 
-        Iterable<Comment> actualList = service.getAll();
+        List<Comment> actualList = service.getAll();
         assertThat(actualList)
                 .isNotNull()
                 .hasSize(2)
@@ -120,5 +120,17 @@ class CommentServiceImplTest {
         given(repo.existsById(anyString())).willReturn(false);
 
         Assertions.assertThrows(CommentNotFoundException.class, () -> service.delete("1"));
+    }
+
+    @Test
+    @DisplayName("тест удаления всех комментариев по id книги")
+    void deleteAllByBookIdTest() {
+        List<String> mockIdList = Arrays.asList("1","2");
+        given(repo.getCommentIdsByBookId(anyString())).willReturn(mockIdList);
+        String id = "1";
+        service.deleteAllByBookId(id);
+
+        verify(repo, times(1)).getCommentIdsByBookId(id);
+        verify(repo, times(1)).deleteByIdIn(mockIdList);
     }
 }

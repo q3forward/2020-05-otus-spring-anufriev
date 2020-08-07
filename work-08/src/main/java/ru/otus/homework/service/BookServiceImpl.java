@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService{
 
     @Transactional(readOnly = true)
     @Override
-    public Iterable<Book> getAll() {
+    public List<Book> getAll() {
         return bookRepo.findAll();
     }
 
@@ -78,7 +78,7 @@ public class BookServiceImpl implements BookService{
         if (!authorName.equals("")) {
             List<Author> authors = authorService.findByName(authorName);
 
-            Author author = null;
+            Author author;
             if (authors.isEmpty()) {
                 author = authorService.add(authorName);
             } else {

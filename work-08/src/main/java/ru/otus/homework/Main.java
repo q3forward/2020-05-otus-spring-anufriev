@@ -12,7 +12,7 @@ import ru.otus.homework.repository.GenreRepository;
 @SpringBootApplication
 public class Main {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(Main.class);
     }
 }

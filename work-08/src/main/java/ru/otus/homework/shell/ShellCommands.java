@@ -67,6 +67,7 @@ public class ShellCommands {
         String bookId = inputService.writeIn();
         try {
             bookService.delete(bookId);
+            commentService.deleteAllByBookId(bookId);
         } catch(BookNotFoundException e) {
             outputService.writeOut(e.getMessage());
         }
@@ -123,7 +124,7 @@ public class ShellCommands {
         }
     }
 
-    @ShellMethod(value="create", key={"cc"})
+    @ShellMethod(value="commentCreate", key={"cc"})
     public void createComment() {
         outputService.writeOut("Введите id книги:");
         String bookId = inputService.writeIn();

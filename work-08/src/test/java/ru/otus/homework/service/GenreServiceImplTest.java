@@ -45,7 +45,7 @@ class GenreServiceImplTest {
         List<Genre> expectedList = Arrays.asList(genre, genre2);
         given(repo.findAll()).willReturn(expectedList);
 
-        Iterable<Genre> actualList = service.findAll();
+        List<Genre> actualList = service.findAll();
         assertThat(actualList)
                 .isNotNull()
                 .hasSize(2)
