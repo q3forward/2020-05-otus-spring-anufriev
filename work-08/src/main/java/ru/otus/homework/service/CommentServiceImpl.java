@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public void deleteAllByBookId(String bookId) {
         if (bookId!=null && !bookId.equals("")) {
-            commentRepo.deleteByIdIn(commentRepo.getCommentIdsByBookId(bookId));
+            commentRepo.deleteByBookId(bookId);
         }
     }
 
@@ -92,11 +92,6 @@ public class CommentServiceImpl implements CommentService{
         } else {
             return new ArrayList();
         }
-    }
-
-    @Override
-    public List<String> getCommentIdsByBookId(String bookId) {
-        return commentRepo.getCommentIdsByBookId(bookId);
     }
 
     private void setBookForComment(Comment comment, String bookId) throws BookNotFoundException{

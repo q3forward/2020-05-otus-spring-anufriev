@@ -125,12 +125,9 @@ class CommentServiceImplTest {
     @Test
     @DisplayName("тест удаления всех комментариев по id книги")
     void deleteAllByBookIdTest() {
-        List<String> mockIdList = Arrays.asList("1","2");
-        given(repo.getCommentIdsByBookId(anyString())).willReturn(mockIdList);
         String id = "1";
         service.deleteAllByBookId(id);
 
-        verify(repo, times(1)).getCommentIdsByBookId(id);
-        verify(repo, times(1)).deleteByIdIn(mockIdList);
+        verify(repo, times(1)).deleteByBookId(id);
     }
 }

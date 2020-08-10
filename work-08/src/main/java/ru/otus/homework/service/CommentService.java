@@ -12,7 +12,6 @@ public interface CommentService {
     void delete(String commentId) throws CommentNotFoundException;
     void deleteAllByBookId(String bookId);
     List<Comment> getAll();
-    List<String> getCommentIdsByBookId(String bookId);
     Comment getById(String commentId);
     List<Comment> getBookComments(String bookId) throws BookNotFoundException;
 }
