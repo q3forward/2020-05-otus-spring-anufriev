@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Добавление комментария</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<form id="add-form" th:action="@{/addComment}" th:method="post" action="addComment.html">
+    <h1>Добавление комментария:</h1>
+
+    <div class="row">
+        <label for="text">Текст комментария:</label>
+    </div>
+    <div class="row">
+        <textarea id="text" name="text" rows="3" cols="40"></textarea>
+    </div>
+    <input id="bookId" name="bookId" type="text" th:value="${bookId}" hidden/>
+
+    <div class="row">
+        <button type="submit">Сохранить</button>
+    </div>
+</form>
+
+</body>
+</html>
