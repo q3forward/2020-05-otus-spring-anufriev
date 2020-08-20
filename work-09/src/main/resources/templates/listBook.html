@@ -42,7 +42,9 @@
             <a th:href="@{/editBook(id=${book.id})}" href="editBook.html">Изменить</a>
         </td>
         <td>
-            <a th:href="@{/deleteBook(id=${book.id})}" href="deleteBook.html">Удалить</a>
+            <form th:id="'del-form' + ${book.id}" th:action="@{/deleteBook(id=${book.id})}" th:method="post" action="deleteBook.html">
+                <a th:onclick="'deleteClick('+${book.id}+')'" th:href="@{#}">Удалить</a>
+            </form>
         </td>
         <td>
             <a th:href="@{/listComment(id=${book.id})}" href="listComment.html">Комментарии</a>
@@ -51,4 +53,10 @@
     </tbody>
 </table>
 </body>
+
+<script type="text/javascript">
+    function deleteClick(bookId) {
+        document.getElementById("del-form"+bookId).submit(); return false;
+    };
+</script>
 </html>

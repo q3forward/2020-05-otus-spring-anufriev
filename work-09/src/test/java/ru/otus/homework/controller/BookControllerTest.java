@@ -8,7 +8,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
-import ru.otus.homework.domain.Comment;
 import ru.otus.homework.domain.Genre;
 import ru.otus.homework.service.AuthorService;
 import ru.otus.homework.service.BookService;
@@ -82,12 +81,13 @@ public class BookControllerTest {
     @Test
     @DisplayName("тест пост-контроллера изменения книги")
     void postEditBookTest() throws Exception {
-
+        given(authorService.add(anyString())).willReturn(new Author("AuthorName"));
+        given(genreService.add(anyString())).willReturn(new Genre("GenreName"));
         mvc.perform(post("/editBook")
                 .param("id", "101")
-                .param("title","Test title")
-                .param("author", new Author().toString())
-                .param("genre", new Genre().toString()))
+                .param("title", "Test title")
+                .param("newAuthorName", "newAuthorName")
+                .param("newGenreName", "newGenreName"))
             .andDo(print())
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/"));
@@ -96,7 +96,7 @@ public class BookControllerTest {
     @Test
     @DisplayName("тест контроллера удаления книги")
     void deleteCommentTest() throws Exception {
-        mvc.perform(get("/deleteBook").param("id", "101"))
+        mvc.perform(post("/deleteBook").param("id", "101"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));

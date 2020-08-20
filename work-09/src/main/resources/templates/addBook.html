@@ -27,6 +27,8 @@
 <form id="add-form" th:action="@{/addBook}" th:method="post" action="addBook.html">
     <h1>Добавление книги</h1>
 
+    <a th:href="@{/}" href="/">Назад</a>
+
     <div class="row">
         <label for="title">Название:</label>
         <input id="title" name="title" type="text" value=""/>
@@ -38,7 +40,7 @@
             <option value="0">Новый</option>
             <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
         </select>
-        <input id="newAuthor" name="newAuthor" type="text" hidden/>
+        <input id="newAuthor" name="newAuthor" type="text"/>
     </div>
 
     <div class="row">
@@ -47,7 +49,7 @@
             <option value="0">Новый</option>
             <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
         </select>
-        <input id="newGenre" name="newGenre" type="text" hidden/>
+        <input id="newGenre" name="newGenre" type="text"/>
     </div>
 
     <div class="row">

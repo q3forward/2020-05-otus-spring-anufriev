@@ -33,7 +33,9 @@
             <a th:href="@{/editComment(id=${comment.id})}" href="editComment.html">Изменить</a>
         </td>
         <td>
-            <a th:href="@{/deleteComment(id=${comment.id})}" href="deleteComment.html">Удалить</a>
+            <form th:id="'del-form' + ${comment.id}" th:action="@{/deleteComment(id=${comment.id})}" th:method="post" action="deleteComment.html">
+                <a th:onclick="'deleteClick('+${comment.id}+')'" th:href="@{#}">Удалить</a>
+            </form>
         </td>
     </tr>
 
@@ -44,4 +46,10 @@
 </div>
 
 </body>
+
+<script type="text/javascript">
+    function deleteClick(commentId) {
+        document.getElementById("del-form"+commentId).submit(); return false;
+    };
+</script>
 </html>

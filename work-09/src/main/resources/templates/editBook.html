@@ -27,6 +27,8 @@
 <form id="edit-form" th:action="@{/editBook(id=${book.id})}" th:method="post" action="editBook.html">
     <h1>Данные книги:</h1>
 
+    <a th:href="@{/}" href="/">Назад</a>
+
     <div class="row">
         <label for="id-input">ID:</label>
         <input id="id-input" type="text" readonly="readonly" th:value="${book.id}" value="1"/>
@@ -43,7 +45,7 @@
             <option value="0">Новый</option>
             <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}" th:selected="${author.id == choosedAuthorId}"></option>
         </select>
-        <input id="newAuthor" name="newAuthor" type="text" hidden/>
+        <input id="newAuthorName" name="newAuthorName" type="text" hidden/>
     </div>
 
     <div class="row">
@@ -52,11 +54,11 @@
             <option value="0">Новый</option>
             <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}" th:selected="${genre.id == choosedGenreId}"></option>
         </select>
-        <input id="newGenre" name="newGenre" type="text" hidden/>
+        <input id="newGenreName" name="newGenreName" type="text" hidden/>
     </div>
 
     <div class="row">
-        <button type="submit">Save</button>
+        <button type="submit">Сохранить</button>
     </div>
 </form>
 
@@ -64,10 +66,10 @@
 
 <script type="text/javascript">
     function authorChange() {
-        document.getElementById("newAuthor").hidden = document.getElementById('author').value!="0";
+        document.getElementById("newAuthorName").hidden = document.getElementById('author').value!="0";
     };
     function genreChange() {
-        document.getElementById("newGenre").hidden = document.getElementById('genre').value!="0";
+        document.getElementById("newGenreName").hidden = document.getElementById('genre').value!="0";
     };
 </script>
 

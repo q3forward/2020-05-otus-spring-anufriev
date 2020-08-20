@@ -100,7 +100,7 @@ class CommentControllerTest {
         Book book = new Book(101L, "Test title", new Author(), new Genre());
         given(commentService.getById(anyLong())).willReturn(new Comment(101L, "Text comment", book));
 
-        mvc.perform(get("/deleteComment").param("id", "101"))
+        mvc.perform(post("/deleteComment").param("id", "101"))
                 .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/listComment?id=101"));

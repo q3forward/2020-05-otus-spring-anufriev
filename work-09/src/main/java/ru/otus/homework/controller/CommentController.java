@@ -29,7 +29,7 @@ public class CommentController {
     }
 
     @GetMapping("/listComment")
-    public String listComment(@RequestParam("id") Long bookId, Model model) throws BookNotFoundException {
+    public String listCommentView(@RequestParam("id") Long bookId, Model model) throws BookNotFoundException {
         List<Comment> comments = commentService.getBookComments(bookId);
         Book book = bookService.getById(bookId);
         model.addAttribute("comments", comments);
@@ -39,13 +39,13 @@ public class CommentController {
     }
 
     @GetMapping("/addComment")
-    public String addComment(@RequestParam("bookId") Long bookId, Model model) {
+    public String addCommentView(@RequestParam("bookId") Long bookId, Model model) {
         model.addAttribute("bookId", bookId);
         return "addComment";
     }
 
     @GetMapping("/editComment")
-    public String editComment(@RequestParam("id") Long id, Model model) {
+    public String editCommentView(@RequestParam("id") Long id, Model model) {
         Comment comment = commentService.getById(id);
         model.addAttribute("id", comment.getId());
         model.addAttribute("bookId", comment.getBook().getId());
@@ -67,7 +67,7 @@ public class CommentController {
         return new ModelAndView("redirect:/listComment", model);
     }
 
-    @GetMapping("/deleteComment")
+    @PostMapping("/deleteComment")
     public ModelAndView deleteComment(@RequestParam("id") Long id, ModelMap model) throws CommentNotFoundException {
         Long bookId = commentService.getById(id).getBook().getId();
         commentService.delete(id);

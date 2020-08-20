@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.homework.domain.Author;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Genre;
+import ru.otus.homework.dto.BookDto;
 import ru.otus.homework.service.AuthorService;
 import ru.otus.homework.service.BookService;
 import ru.otus.homework.service.GenreService;
@@ -16,6 +17,7 @@ import ru.otus.homework.utils.exception.BookNotFoundException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 public class BookController {
@@ -31,21 +33,21 @@ public class BookController {
     }
 
     @GetMapping("/")
-    public String listBook(Model model) {
+    public String listBookView(Model model) {
         List<Book> books = bookService.getAll();
         model.addAttribute("books", books);
         return "listBook";
     }
 
     @GetMapping("/addBook")
-    public String addBook(Model model) {
+    public String addBookView(Model model) {
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("genres", genreService.findAll());
         return "addBook";
     }
 
     @GetMapping("/editBook")
-    public String editBook(@RequestParam("id") Long id, Model model) throws BookNotFoundException {
+    public String editBookView(@RequestParam("id") Long id, Model model) {
         Book book = bookService.getById(id);
         model.addAttribute("book", book);
         model.addAttribute("authors", authorService.findAll());
@@ -55,7 +57,7 @@ public class BookController {
         return "editBook";
     }
 
-    @GetMapping("/deleteBook")
+    @PostMapping("/deleteBook")
     public String deleteBook(@RequestParam("id") Long id) throws BookNotFoundException {
         bookService.delete(id);
         return "redirect:/";
@@ -68,22 +70,16 @@ public class BookController {
     }
 
     @PostMapping("/editBook")
-    public String editBook(@RequestParam Map<String, String> params, Long id, String title, @RequestParam Author author, @RequestParam Genre genre) throws BookNotFoundException {
-        String authorName;
-        String genreName;
+    public String editBook(BookDto bookDto) throws BookNotFoundException {
+        String authorName = Optional.ofNullable(bookDto.getAuthor())
+                .map(Author::getName)
+                .orElse(authorService.add(bookDto.getNewAuthorName()).getName());
 
-        if (author==null) {
-            authorName = authorService.add(params.get("newAuthor")).getName();
-        } else {
-            authorName = author.getName();
-        }
+        String genreName = Optional.ofNullable(bookDto.getGenre())
+                .map(Genre::getName)
+                .orElse(genreService.add(bookDto.getNewGenreName()).getName());
 
-        if (genre==null) {
-            genreName = genreService.add(params.get("newGenre")).getName();
-        } else {
-            genreName = genre.getName();
-        }
-        bookService.update(id, title, authorName, genreName);
+        bookService.update(bookDto.getId(), bookDto.getTitle(), authorName, genreName);
         return "redirect:/";
     }
 }
