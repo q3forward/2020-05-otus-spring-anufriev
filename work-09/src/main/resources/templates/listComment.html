@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all comments</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .comments, .comments td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+
+        .ref {
+            margin-bottom: 20px
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="'Комментарии по книге: '+${bookTitle}">Комментарии по книге:</h1>
+<div class="ref">
+    <a th:href="@{/}" href="/">Назад</a>
+    <a th:href="@{/addComment(bookId=${bookId})}" href="/">Добавить</a>
+</div>
+<table th:if="${comments.size()}" class="comments">
+    <tbody>
+    <tr th:each="comment : ${comments}">
+        <td th:text="${comment.id}">1</td>
+        <td th:text="${comment.text}">text</td>
+        <td>
+            <a th:href="@{/editComment(id=${comment.id})}" href="editComment.html">Изменить</a>
+        </td>
+        <td>
+            <form th:id="'del-form' + ${comment.id}" th:action="@{/deleteComment(id=${comment.id})}" th:method="post" action="deleteComment.html">
+                <a th:onclick="'deleteClick('+${comment.id}+')'" th:href="@{#}">Удалить</a>
+            </form>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+<div th:unless="${comments.size()}">
+    Нет комментариев
+</div>
+
+</body>
+
+<script type="text/javascript">
+    function deleteClick(commentId) {
+        document.getElementById("del-form"+commentId).submit(); return false;
+    };
+</script>
+</html>
