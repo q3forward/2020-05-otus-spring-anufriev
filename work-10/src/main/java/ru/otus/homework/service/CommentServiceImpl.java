@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.domain.Book;
 import ru.otus.homework.domain.Comment;
 import ru.otus.homework.repository.CommentRepository;
-import ru.otus.homework.utils.exception.BookNotFoundException;
 import ru.otus.homework.utils.exception.CommentNotFoundException;
 
 
@@ -65,7 +64,7 @@ public class CommentServiceImpl implements CommentService{
 
     @Transactional(readOnly = true)
     @Override
-    public Iterable<Comment> getAll() {
+    public List<Comment> getAll() {
         return commentRepo.findAll();
     }
 
@@ -81,7 +80,7 @@ public class CommentServiceImpl implements CommentService{
         if (bookId!=0) {
             return commentRepo.getCommentsByBookId(bookId);
         } else {
-            return new ArrayList();
+            return new ArrayList<>();
         }
     }
 

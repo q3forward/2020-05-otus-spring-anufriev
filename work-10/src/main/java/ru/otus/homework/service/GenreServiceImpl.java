@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.homework.domain.Genre;
 import ru.otus.homework.repository.GenreRepository;
 
+import java.util.List;
+
 @Service
 public class GenreServiceImpl implements GenreService{
 
@@ -29,7 +31,7 @@ public class GenreServiceImpl implements GenreService{
 
     @Transactional(readOnly = true)
     @Override
-    public Iterable<Genre> findAll() {
+    public List<Genre> findAll() {
         return genreRepo.findAll();
     }
 }

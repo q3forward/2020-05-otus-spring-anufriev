@@ -12,7 +12,7 @@ public interface CommentService {
     void update(long commentId, Book book, String text) throws CommentNotFoundException;
     void delete(long commentId) throws CommentNotFoundException;
     void deleteAllByBookId(long bookId);
-    Iterable<Comment> getAll();
+    List<Comment> getAll();
     Comment getById(long commentId);
     List<Comment> getBookComments(long bookId) throws BookNotFoundException;
 }

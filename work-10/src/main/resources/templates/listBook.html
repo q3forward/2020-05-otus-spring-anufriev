@@ -46,7 +46,7 @@
     };
 
     function loadBooks() {
-        callFetch("/api/books","GET", undefined, function(bookList){
+        callFetch("/api/book","GET", undefined, function(bookList){
             var contentStr = "";
             bookList.forEach(function (book) {
                 let author = book.author,

@@ -9,5 +9,5 @@ public interface AuthorService {
     Author add(String authorName);
     Optional<Author> findById(long authorId);
     List<Author> findByName(String authorName);
-    Iterable<Author> findAll();
+    List<Author> findAll();
 }

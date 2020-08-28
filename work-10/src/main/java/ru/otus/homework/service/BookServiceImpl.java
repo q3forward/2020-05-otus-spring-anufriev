@@ -69,7 +69,7 @@ public class BookServiceImpl implements BookService{
     @Transactional(readOnly = true)
     @Override
     public List<Book> getAll() {
-        return bookRepo.findAll().stream().collect(Collectors.toList());
+        return bookRepo.findAll();
     }
 
     @Transactional(readOnly = true)

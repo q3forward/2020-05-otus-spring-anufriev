@@ -1,9 +1,7 @@
 package ru.otus.homework.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.otus.homework.domain.Comment;
 import ru.otus.homework.dto.CommentDto;
@@ -25,7 +23,7 @@ public class CommentController {
         this.bookService = bookService;
     }
 
-    @GetMapping(value = "/api/comments/book/{bookId}")
+    @GetMapping(value = "/api/comment/book/{bookId}")
     public List<Comment> getCommentsByBook(@PathVariable Long bookId) throws BookNotFoundException {
         List<Comment> comments = commentService.getBookComments(bookId);
         return comments;
@@ -37,20 +35,20 @@ public class CommentController {
     }
 
     @DeleteMapping(value="/api/comment/{id}")
-    public ResponseEntity deleteComment(@PathVariable Long id) throws CommentNotFoundException {
+    public ResponseEntity<?> deleteComment(@PathVariable Long id) throws CommentNotFoundException {
         commentService.delete(id);
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/api/comment")
-    public ResponseEntity addComment(@RequestBody CommentDto commentDto) {
+    public ResponseEntity<?> addComment(@RequestBody CommentDto commentDto) {
         commentService.add(bookService.getById(commentDto.getBookId()), commentDto.getText());
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/api/comment/{id}")
-    public ResponseEntity editComment(@PathVariable Long id, @RequestBody CommentDto commentDto) throws CommentNotFoundException {
+    public ResponseEntity<?> editComment(@PathVariable Long id, @RequestBody CommentDto commentDto) throws CommentNotFoundException {
         commentService.update(id, bookService.getById(commentDto.getBookId()), commentDto.getText());
-        return new ResponseEntity(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 }

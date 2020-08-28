@@ -44,7 +44,7 @@ public class BookControllerTest {
     public void getBooksTest() throws Exception {
         given(bookService.getAll()).willReturn(Arrays.asList(new Book(1L, "Book1", new Author(), new Genre()), new Book(2L, "Book2", new Author(), new Genre())));
 
-        mvc.perform(get("/api/books"))
+        mvc.perform(get("/api/book"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*]",hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))

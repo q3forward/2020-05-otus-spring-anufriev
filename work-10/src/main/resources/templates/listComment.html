@@ -55,7 +55,7 @@
 
     function loadComments() {
         let bookId = document.getElementById("book-id").value;
-        callFetch("/api/comments/book/"+bookId,"GET", undefined, function(commentList){
+        callFetch("/api/comment/book/"+bookId,"GET", undefined, function(commentList){
             document.getElementsByClassName("comments")[0].hidden = (!commentList || commentList.length==0);
             document.getElementById("no-data").hidden = (commentList && commentList.length>0);
 

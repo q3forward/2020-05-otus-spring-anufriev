@@ -38,7 +38,7 @@ public class CommentControllerTest {
     public void getCommentsByBookTest() throws Exception {
         given(commentService.getBookComments(anyLong())).willReturn(Arrays.asList(new Comment(1L, "Comment1", new Book()), new Comment(2L, "Comment2", new Book())));
 
-        mvc.perform(get("/api/comments/book/100"))
+        mvc.perform(get("/api/comment/book/100"))
             .andExpect(status().isOk())
                 .andExpect(jsonPath("$[*]",hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
