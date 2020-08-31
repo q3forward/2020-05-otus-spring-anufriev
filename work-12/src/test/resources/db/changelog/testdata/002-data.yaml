@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-data-users
+      author: q3Forward
+      context: test
+      runOnChange: true
+      loadUpdateData:
+        primaryKey: id
+        file: csv/002-users.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        encoding: UTF-8
+        tableName: users
