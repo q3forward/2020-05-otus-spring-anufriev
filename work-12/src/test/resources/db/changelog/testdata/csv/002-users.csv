@@ -1,0 +1,3 @@
+id;login;password;authority
+101;admin;admin;ADMIN
+102;someone;123;USER
