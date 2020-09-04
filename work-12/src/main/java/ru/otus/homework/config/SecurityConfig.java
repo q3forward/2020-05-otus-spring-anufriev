@@ -19,10 +19,10 @@ import ru.otus.homework.service.UserServiceImpl;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService userServiceImpl;
+    private final UserDetailsService userService;
 
-    public SecurityConfig(UserServiceImpl userServiceImpl) {
-        this.userServiceImpl = userServiceImpl;
+    public SecurityConfig(UserDetailsService userService) {
+        this.userService = userService;
     }
 
     @Override
@@ -53,6 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configure( AuthenticationManagerBuilder auth ) throws Exception {
-        auth.userDetailsService(userServiceImpl);
+        auth.userDetailsService(userService);
     }
 }
