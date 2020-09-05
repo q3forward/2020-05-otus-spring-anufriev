@@ -1,0 +1,5 @@
+id;login;password;authority
+101;admin;admin123;ADMIN
+102;Nick;987;USER
+103;Paul;qwerty;USER
+104;Guest;guest;GUEST
