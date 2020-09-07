@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all comments</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .comments, .comments td {
+            border: 1px solid lightgray;
+            padding: 5px;
+        }
+
+        .ref {
+            margin-bottom: 20px
+        }
+    </style>
+    <script src="common.js"></script>
+</head>
+<body onload="initPage()">
+<h1 th:text="'Комментарии по книге: '">Комментарии по книге:</h1>
+<div class="ref">
+    <a th:href="@{/}" href="/">Назад</a>
+    <a th:href="@{/addComment(bookId=${bookId})}" href="">Добавить</a>
+    <a th:unless="${authorities.contains('ROLE_ANONYMOUS')}" th:href="@{/logout}" href="logout.html">Logout</a>
+</div>
+<input id="book-id" type="text" readonly="readonly" th:value="${bookId}" hidden/>
+
+<table class="comments">
+    <tbody>
+    </tbody>
+</table>
+<div id="no-data">
+    Нет комментариев
+</div>
+
+</body>
+
+<script th:inline="javascript" type="text/javascript">
+    /*<![CDATA[*/
+    let authorities = /*[[${authorities}]]*/ [];
+    /*]]>*/
+    let isAuth = !authorities.includes("ROLE_ANONYMOUS");
+
+    function deleteClick(commentId) {
+        if (!isAuth) {
+            window.location.href = "/login";
+        } else if (authorities.length>0) {
+            callFetch("/api/comment/"+commentId, "DELETE", undefined, function(response){
+                loadComments();
+            });
+        }
+    };
+
+    function initPage() {
+        let bookId = document.getElementById("book-id").value;
+        callFetch("/api/book/"+bookId, "GET", undefined, function(bookData){
+            document.getElementsByTagName("h1")[0].textContent = `Комментарии по книге: ${bookData.title}`;
+        });
+        loadComments();
+    }
+
+    function loadComments() {
+        let bookId = document.getElementById("book-id").value;
+        callFetch("/api/comment/book/"+bookId,"GET", undefined, function(commentList){
+            document.getElementsByClassName("comments")[0].hidden = (!commentList || commentList.length==0);
+            document.getElementById("no-data").hidden = (commentList && commentList.length>0);
+
+            var contentStr = "";
+            commentList.forEach(function (comment) {
+                contentStr += `
+                    <tr>
+                        <td>${comment.id}</td>
+                        <td>${comment.text}</td>
+                        <td>
+                            <a href="editComment?id=${comment.id}&bookId=${bookId}">Изменить</a>
+                        </td>
+                        <td>
+                            <a onclick="deleteClick(${comment.id})" href="#">Удалить</a>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementsByTagName('tbody')[0].innerHTML = contentStr;
+        });
+    }
+</script>
+</html>
