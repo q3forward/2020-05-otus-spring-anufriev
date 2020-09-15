@@ -3,6 +3,7 @@ package ru.otus.homework.domain.jpa;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.otus.homework.domain.HaveId;
 
 import javax.persistence.*;
 
@@ -11,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="genres")
-public class Genre {
+public class Genre implements HaveId<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

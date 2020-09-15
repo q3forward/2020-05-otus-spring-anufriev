@@ -10,6 +10,7 @@ import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.job.flow.support.SimpleFlow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.builder.SimpleStepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.MongoItemReader;
 import org.springframework.batch.item.data.RepositoryItemWriter;
@@ -56,25 +57,19 @@ public class JobConfig {
     @Autowired
     private ClearService clearService;
 
+    @Autowired
+    private TransformService transformService;
+
     /************ FLOWS **************/
 
     @Bean
-    public Job importUserJob(Flow splitFlow, Step bookStep, Step commentStep) {
+    public Job importUserJob(Step splitStep, Step bookStep, Step commentStep) {
         return jobBuilderFactory.get(IMPORT_USER_JOB_NAME)
                 .incrementer(new RunIdIncrementer())
-                .start(splitFlow)
+                .start(clearTargetTables())
+                .next(splitStep)
                 .next(bookStep)
                 .next(commentStep)
-                .build()
-                .listener(new JobExecutionListener() {
-                    @Override
-                    public void beforeJob(JobExecution jobExecution) {
-                        clearService.clearTargetTables();
-                    }
-
-                    @Override
-                    public void afterJob(JobExecution jobExecution) {}
-                })
                 .build();
     }
 
@@ -219,134 +214,56 @@ public class JobConfig {
     /************ STEPS **************/
 
     @Bean
+    public Step splitStep(Flow splitFlow) {
+        return stepBuilderFactory.get("splitStep").flow(splitFlow).build();
+    }
+
+    @Bean
     public Step authorStep(RepositoryItemWriter<Author> writer, MongoItemReader<MongoAuthor> reader, ItemProcessor<MongoAuthor, Author> authorProcessor) {
         List<Link> linkList = new ArrayList<>();
-        return stepBuilderFactory.get("authorStep")
+        SimpleStepBuilder<MongoAuthor, Author> ssb = stepBuilderFactory.get("authorStep")
                 .<MongoAuthor, Author>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .processor(authorProcessor)
-                .writer(writer)
-                .listener(new ItemReadListener<>() {
-                    public void beforeRead() {}
+                .writer(writer);
 
-                    public void afterRead(MongoAuthor monAuthor) {
-                        linkList.add(new Link(monAuthor.getId(), Author.class.getSimpleName()));
-                    }
+        ssb.listener(new ReadListener<>(linkList, Author.class))
+            .listener(new WriteListener<Author>(linkList, transformService))
+            .listener(new ExecutionListener(linkList));
 
-                    public void onReadError(Exception e) {}
-                })
-                .listener(new ItemWriteListener<>() {
-                    public void beforeWrite(List items) {}
-
-                    public void afterWrite(List items) {
-                        for (int i=0; i<items.size(); i++) {
-                            linkList.get(i).setJpaId(((Author)items.get(i)).getId());
-                        }
-                        linkRepository.saveAll(new ArrayList<>(linkList));
-                    }
-
-                    public void onWriteError(Exception exception, List items) {}
-                })
-                .listener(new StepExecutionListener(){
-                    @Override
-                    public void beforeStep(StepExecution stepExecution) {
-                        linkList.clear();
-                    }
-
-                    @Override
-                    public ExitStatus afterStep(StepExecution stepExecution) {
-                        return null;
-                    }
-                })
-                .build();
+        return ssb.build();
     }
 
     @Bean
     public Step genreStep(RepositoryItemWriter<Genre> writer, MongoItemReader<MongoGenre> reader, ItemProcessor<MongoGenre, Genre> genreProcessor) {
         List<Link> linkList = new ArrayList<>();
-        return stepBuilderFactory.get("genreStep")
+        SimpleStepBuilder<MongoGenre, Genre> ssb =  stepBuilderFactory.get("genreStep")
                 .<MongoGenre, Genre>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .processor(genreProcessor)
-                .writer(writer)
-                .listener(new ItemReadListener<>() {
-                    public void beforeRead() {}
+                .writer(writer);
 
-                    public void afterRead(MongoGenre monGenre) {
-                        linkList.add(new Link(monGenre.getId(), Genre.class.getSimpleName()));
-                    }
+        ssb.listener(new ReadListener<>(linkList, Genre.class))
+            .listener(new WriteListener<Genre>(linkList, transformService))
+            .listener(new ExecutionListener(linkList));
 
-                    public void onReadError(Exception e) {}
-                })
-                .listener(new ItemWriteListener<>() {
-                    public void beforeWrite(List items) {}
-
-                    public void afterWrite(List items) {
-                        for (int i=0; i<items.size(); i++) {
-                            linkList.get(i).setJpaId(((Genre)items.get(i)).getId());
-                        }
-                        linkRepository.saveAll(new ArrayList<>(linkList));
-                        linkList.clear();
-                    }
-
-                    public void onWriteError(Exception exception, List items) {}
-                })
-                .listener(new StepExecutionListener(){
-                    @Override
-                    public void beforeStep(StepExecution stepExecution) {
-                        linkList.clear();
-                    }
-
-                    @Override
-                    public ExitStatus afterStep(StepExecution stepExecution) {
-                        return null;
-                    }
-                })
-                .build();
+        return ssb.build();
     }
 
     @Bean
     public Step bookStep(RepositoryItemWriter<Book> writer, MongoItemReader<MongoBook> reader, ItemProcessor<MongoBook, Book> bookProcessor) {
         List<Link> linkList = new ArrayList<>();
-        return stepBuilderFactory.get("bookStep")
+        SimpleStepBuilder<MongoBook, Book> ssb =  stepBuilderFactory.get("bookStep")
                 .<MongoBook, Book>chunk(CHUNK_SIZE)
                 .reader(reader)
                 .processor(bookProcessor)
-                .writer(writer)
-                .listener(new ItemReadListener<>() {
-                    public void beforeRead() {}
+                .writer(writer);
 
-                    public void afterRead(MongoBook monBook) {
-                        linkList.add(new Link(monBook.getId(), Book.class.getSimpleName()));
-                    }
+        ssb.listener(new ReadListener<>(linkList, Book.class))
+                .listener(new WriteListener<Book>(linkList, transformService))
+                .listener(new ExecutionListener(linkList));
 
-                    public void onReadError(Exception e) {}
-                })
-                .listener(new ItemWriteListener<>() {
-                    public void beforeWrite(List items) {}
-
-                    public void afterWrite(List items) {
-                        for (int i=0; i<items.size(); i++) {
-                            linkList.get(i).setJpaId(((Book)items.get(i)).getId());
-                        }
-                        linkRepository.saveAll(new ArrayList<>(linkList));
-                        linkList.clear();
-                    }
-
-                    public void onWriteError(Exception exception, List items) {}
-                })
-                .listener(new StepExecutionListener(){
-                    @Override
-                    public void beforeStep(StepExecution stepExecution) {
-                        linkList.clear();
-                    }
-
-                    @Override
-                    public ExitStatus afterStep(StepExecution stepExecution) {
-                        return null;
-                    }
-                })
-                .build();
+        return ssb.build();
     }
 
     @Bean
@@ -359,5 +276,20 @@ public class JobConfig {
                 .build();
     }
 
+    /************ TASKLET ************/
+
+    @Bean
+    public ClearTableTasklet clearTableTasklet() {
+        ClearTableTasklet tasklet = new ClearTableTasklet();
+        tasklet.setClearService(clearService);
+        return tasklet;
+    }
+
+    @Bean
+    public Step clearTargetTables() {
+        return this.stepBuilderFactory.get("clearTargetTables")
+                .tasklet(clearTableTasklet())
+                .build();
+    }
 }
 

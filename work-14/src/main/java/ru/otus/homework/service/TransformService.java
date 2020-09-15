@@ -1,15 +1,16 @@
 package ru.otus.homework.service;
 
 import org.springframework.stereotype.Service;
-import ru.otus.homework.domain.jpa.Author;
-import ru.otus.homework.domain.jpa.Book;
-import ru.otus.homework.domain.jpa.Comment;
-import ru.otus.homework.domain.jpa.Genre;
+import ru.otus.homework.domain.HaveId;
+import ru.otus.homework.domain.jpa.*;
 import ru.otus.homework.domain.mongo.MongoAuthor;
 import ru.otus.homework.domain.mongo.MongoBook;
 import ru.otus.homework.domain.mongo.MongoComment;
 import ru.otus.homework.domain.mongo.MongoGenre;
 import ru.otus.homework.repository.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TransformService {
@@ -45,5 +46,13 @@ public class TransformService {
     public Comment getJpaComment(MongoComment comment) {
         Long bookId = linkRepo.findByMongoIdAndClassName(comment.getBook().getId(),"Book").getJpaId();
         return new Comment(comment.getText(), bookRepo.findById(bookId).get());
+    }
+
+    public <T extends HaveId<Long>> void saveLinks(List<T> items, List<Link> linkList) {
+        for (int i=0; i<items.size(); i++) {
+            linkList.get(i).setJpaId(((T)items.get(i)).getId());
+        }
+        linkRepo.saveAll(new ArrayList<>(linkList));
+        linkList.clear();
     }
 }

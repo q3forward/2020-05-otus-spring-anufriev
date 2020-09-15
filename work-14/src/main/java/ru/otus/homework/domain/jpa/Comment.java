@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.otus.homework.domain.jpa.Book;
+import ru.otus.homework.domain.HaveId;
 
 import javax.persistence.*;
 
@@ -14,10 +14,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name="comments")
 
-public class Comment {
+public class Comment implements HaveId<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name="text")
     private String text;

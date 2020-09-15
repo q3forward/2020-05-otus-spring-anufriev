@@ -6,12 +6,13 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import ru.otus.homework.domain.HaveId;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection="comments")
-public class MongoComment {
+public class MongoComment implements HaveId<String> {
     @Id
     private String id;
     private String text;

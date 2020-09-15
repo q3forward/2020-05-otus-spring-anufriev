@@ -5,12 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import ru.otus.homework.domain.HaveId;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection="genres")
-public class MongoGenre {
+public class MongoGenre implements HaveId<String> {
     @Id
     private String id;
     private String name;
