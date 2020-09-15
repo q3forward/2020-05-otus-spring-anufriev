@@ -48,6 +48,10 @@ public class TransformService {
         return new Comment(comment.getText(), bookRepo.findById(bookId).get());
     }
 
+    public <T extends HaveId<String>> void addLink(T item, List<Link> linkList, Class clazz) {
+        linkList.add(new Link(item.getId(), clazz.getSimpleName()));
+    }
+
     public <T extends HaveId<Long>> void saveLinks(List<T> items, List<Link> linkList) {
         for (int i=0; i<items.size(); i++) {
             linkList.get(i).setJpaId(((T)items.get(i)).getId());

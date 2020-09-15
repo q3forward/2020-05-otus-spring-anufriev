@@ -227,7 +227,7 @@ public class JobConfig {
                 .processor(authorProcessor)
                 .writer(writer);
 
-        ssb.listener(new ReadListener<>(linkList, Author.class))
+        ssb.listener(new ReadListener<>(linkList, transformService, Author.class))
             .listener(new WriteListener<Author>(linkList, transformService))
             .listener(new ExecutionListener(linkList));
 
@@ -243,7 +243,7 @@ public class JobConfig {
                 .processor(genreProcessor)
                 .writer(writer);
 
-        ssb.listener(new ReadListener<>(linkList, Genre.class))
+        ssb.listener(new ReadListener<>(linkList, transformService, Genre.class))
             .listener(new WriteListener<Genre>(linkList, transformService))
             .listener(new ExecutionListener(linkList));
 
@@ -259,7 +259,7 @@ public class JobConfig {
                 .processor(bookProcessor)
                 .writer(writer);
 
-        ssb.listener(new ReadListener<>(linkList, Book.class))
+        ssb.listener(new ReadListener<>(linkList, transformService, Book.class))
                 .listener(new WriteListener<Book>(linkList, transformService))
                 .listener(new ExecutionListener(linkList));
 

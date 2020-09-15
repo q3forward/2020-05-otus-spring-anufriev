@@ -3,16 +3,19 @@ package ru.otus.homework.config;
 import org.springframework.batch.core.ItemReadListener;
 import ru.otus.homework.domain.HaveId;
 import ru.otus.homework.domain.jpa.Link;
+import ru.otus.homework.service.TransformService;
 
 import java.util.List;
 
 public class ReadListener<T extends HaveId<String>> implements ItemReadListener<T> {
 
     private List<Link> linkList;
+    private final TransformService transformService;
     private Class clazz;
 
-    public ReadListener(List<Link> linkList, Class clazz) {
+    public ReadListener(List<Link> linkList, TransformService transformService, Class clazz) {
         this.linkList = linkList;
+        this.transformService = transformService;
         this.clazz = clazz;
     }
 
@@ -21,7 +24,7 @@ public class ReadListener<T extends HaveId<String>> implements ItemReadListener<
 
     @Override
     public void afterRead(T item) {
-        linkList.add(new Link(item.getId(), clazz.getSimpleName()));
+        transformService.addLink(item, linkList, clazz);
     }
 
     @Override
