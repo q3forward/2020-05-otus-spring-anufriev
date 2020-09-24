@@ -1,7 +1,6 @@
 package ru.otus.homework.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -39,41 +38,40 @@ public class BookController {
     }
 
     @DeleteMapping(value="/api/book/{id}")
-    public Mono<ResponseEntity<Void>> deleteBook(@PathVariable String id) {
+    public Mono<Void> deleteBook(@PathVariable String id) {
         return bookRepo.findById(id)
-                .flatMap(book -> bookRepo.delete(book)
-                                .then(Mono.just(ResponseEntity.ok().<Void>build()))
-                ).defaultIfEmpty(ResponseEntity.notFound().build());
+                .flatMap(book -> bookRepo.delete(book));
     }
 
     @PostMapping("/api/book")
-    public Mono<ResponseEntity<Void>> addBook(@RequestBody BookDto bookDto) {
+    public Mono<Book> addBook(@RequestBody BookDto bookDto) {
         Book book = new Book();
-        return authorRepo.findAllByName(getAuthorName(bookDto))
+        return authorRepo.findAllByName(getAuthorName(bookDto)).next()
                     .flatMap(author -> {
                         book.setAuthor(author);
                         return genreRepo.findByName(getGenreName(bookDto));
                     }).flatMap(genre -> {
                         book.setGenre(genre);
                         book.setTitle(bookDto.getTitle());
-                        return bookRepo.save(book).then(Mono.just(ResponseEntity.ok().<Void>build()));
-                    }).then(Mono.just(ResponseEntity.ok().<Void>build()));
+                        return bookRepo.save(book);
+                    });
     }
 
     @PutMapping("/api/book/{id}")
-    public Mono<ResponseEntity<Void>> editBook(@PathVariable String id, @RequestBody BookDto bookDto) {
+    public Mono<Book> editBook(@PathVariable String id, @RequestBody BookDto bookDto) {
         Book book = new Book();
         return bookRepo.findById(id).flatMap(foundBook -> {
             book.setId(foundBook.getId());
             book.setTitle(bookDto.getTitle());
-            return authorRepo.findAllByName(getAuthorName(bookDto)).flatMap(author -> {
-                book.setAuthor(author);
-                return genreRepo.findByName(getGenreName(bookDto));
-            }).flatMap(genre -> {
-                book.setGenre(genre);
-                return bookRepo.save(book).then(Mono.just(ResponseEntity.ok().<Void>build()));
-            }).then(Mono.just(ResponseEntity.ok().<Void>build()));
-        }).defaultIfEmpty(ResponseEntity.badRequest().build());
+            return authorRepo.findAllByName(getAuthorName(bookDto)).next()
+                    .flatMap(author -> {
+                        book.setAuthor(author);
+                        return genreRepo.findByName(getGenreName(bookDto));
+                    }).flatMap(genre -> {
+                        book.setGenre(genre);
+                        return bookRepo.save(book);
+                    });
+        });
     }
 
     private String getAuthorName(BookDto bookDto) {

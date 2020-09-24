@@ -32,26 +32,24 @@ public class CommentController {
     }
 
     @DeleteMapping(value="/api/comment/{id}")
-    public Mono<ResponseEntity<Void>> deleteComment(@PathVariable String id) {
+    public Mono<Void> deleteComment(@PathVariable String id) {
         return commentRepo.findById(id)
-                .flatMap(comment -> commentRepo.delete(comment)
-                        .then(Mono.just(ResponseEntity.ok().<Void>build()))
-                ).defaultIfEmpty(ResponseEntity.notFound().build());
+                .flatMap(comment -> commentRepo.delete(comment));
     }
 
     @PostMapping("/api/comment")
-    public Mono<ResponseEntity<?>> addComment(@RequestBody CommentDto commentDto) {
+    public Mono<Comment> addComment(@RequestBody CommentDto commentDto) {
         Comment comment = new Comment();
         return bookRepo.findById(commentDto.getBookId())
                     .flatMap(book -> {
                         comment.setBook(book);
                         comment.setText(commentDto.getText());
-                        return commentRepo.save(comment).then(Mono.just(ResponseEntity.ok().<Void>build()));
-                    }).then(Mono.just(ResponseEntity.ok().<Void>build()));
+                        return commentRepo.save(comment);
+                    });
     }
 
     @PutMapping("/api/comment/{id}")
-    public Mono<ResponseEntity<Void>> editComment(@PathVariable String id, @RequestBody CommentDto commentDto) {
+    public Mono<Comment> editComment(@PathVariable String id, @RequestBody CommentDto commentDto) {
         Comment comment = new Comment();
         return commentRepo.findById(id).flatMap(foundComment -> {
             comment.setId(foundComment.getId());
@@ -59,8 +57,8 @@ public class CommentController {
             return bookRepo.findById(commentDto.getBookId())
                     .flatMap(book -> {
                         comment.setBook(book);
-                        return commentRepo.save(comment).then(Mono.just(ResponseEntity.ok().<Void>build()));
-                    }).then(Mono.just(ResponseEntity.ok().<Void>build()));
-        }).defaultIfEmpty(ResponseEntity.badRequest().build());
+                        return commentRepo.save(comment);
+                    });
+        });
     }
 }
