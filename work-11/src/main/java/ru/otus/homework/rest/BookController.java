@@ -12,6 +12,7 @@ import ru.otus.homework.repository.AuthorRepository;
 import ru.otus.homework.repository.BookRepository;
 import ru.otus.homework.repository.GenreRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,33 +46,38 @@ public class BookController {
 
     @PostMapping("/api/book")
     public Mono<Book> addBook(@RequestBody BookDto bookDto) {
-        Book book = new Book();
-        return authorRepo.findAllByName(getAuthorName(bookDto)).next()
-                    .flatMap(author -> {
-                        book.setAuthor(author);
-                        return genreRepo.findByName(getGenreName(bookDto));
-                    }).flatMap(genre -> {
-                        book.setGenre(genre);
-                        book.setTitle(bookDto.getTitle());
-                        return bookRepo.save(book);
-                    });
+        Mono<Author> ma = getOrCreateAuthor(getAuthorName(bookDto));
+        Mono<Genre> mg = getOrCreateGenre(getGenreName(bookDto));
+
+        return Mono.zip(ma, mg, (author, genre) -> new Book(bookDto.getTitle(), author, genre))
+                .flatMap(book -> bookRepo.save(book));
     }
 
     @PutMapping("/api/book/{id}")
     public Mono<Book> editBook(@PathVariable String id, @RequestBody BookDto bookDto) {
-        Book book = new Book();
-        return bookRepo.findById(id).flatMap(foundBook -> {
-            book.setId(foundBook.getId());
-            book.setTitle(bookDto.getTitle());
-            return authorRepo.findAllByName(getAuthorName(bookDto)).next()
-                    .flatMap(author -> {
-                        book.setAuthor(author);
-                        return genreRepo.findByName(getGenreName(bookDto));
-                    }).flatMap(genre -> {
-                        book.setGenre(genre);
-                        return bookRepo.save(book);
-                    });
+        Mono<Author> ma = getOrCreateAuthor(getAuthorName(bookDto));
+        Mono<Genre> mg = getOrCreateGenre(getGenreName(bookDto));
+
+        return bookRepo.findById(id).flatMap(foundBook ->
+            Mono.zip(ma, mg, (author, genre) ->
+                new Book(foundBook.getId(), bookDto.getTitle(), author, genre)
+            ).flatMap(book -> bookRepo.save(book)));
+    }
+
+    private Mono<Author> getOrCreateAuthor(String authorName) {
+        Mono<List<Author>> mla = authorRepo.findAllByName(authorName).collectList();
+        return mla.flatMap(authorList -> {
+            if (authorList.isEmpty()) {
+                return authorRepo.save(new Author(authorName));
+            } else {
+                return Mono.just(authorList.get(0));
+            }
         });
+    }
+
+    private Mono<Genre> getOrCreateGenre(String genreName) {
+        return genreRepo.findByName(genreName)
+                .switchIfEmpty(genreRepo.save(new Genre(genreName)));
     }
 
     private String getAuthorName(BookDto bookDto) {

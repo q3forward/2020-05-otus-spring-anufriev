@@ -73,9 +73,11 @@ public class BookControllerTest {
         given(authorRepo.findAllByName(anyString()))
             .willReturn(Flux.fromIterable(
                     Arrays.asList(new Author("1", "Author1"))));
+        given(authorRepo.save(any(Author.class))).willReturn(Mono.just(new Author("100", "Author")));
         given(genreRepo.findByName(anyString()))
                 .willReturn(Mono.just(
                         new Genre("1", "Genre1")));
+        given(genreRepo.save(any(Genre.class))).willReturn(Mono.just(new Genre("100", "Genre")));
         given(bookRepo.save(any(Book.class))).willReturn(Mono.just(new Book("1", "Book1", new Author(), new Genre())));
 
         BookDto bookDto = new BookDto("1", "Book2", "authorName", "genreName");
@@ -93,9 +95,11 @@ public class BookControllerTest {
         given(authorRepo.findAllByName(anyString()))
                 .willReturn(Flux.fromIterable(
                         Arrays.asList(new Author("1", "Author1"))));
+        given(authorRepo.save(any(Author.class))).willReturn(Mono.just(new Author("100", "Author")));
         given(genreRepo.findByName(anyString()))
                 .willReturn(Mono.just(
                         new Genre("1", "Genre1")));
+        given(genreRepo.save(any(Genre.class))).willReturn(Mono.just(new Genre("100", "Genre")));
         given(bookRepo.findById(anyString())).willReturn(Mono.just(new Book("100", "Book1", new Author(), new Genre())));
         given(bookRepo.save(any(Book.class))).willReturn(Mono.just(new Book("100", "Book2", new Author(), new Genre())));
 
