@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Добавление книги</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script src="common.js"></script>
+</head>
+<body onload="initData()">
+
+    <h1>Добавление книги</h1>
+
+    <a th:href="@{/}" href="/">Назад</a>
+
+    <div class="row">
+        <label for="title">Название:</label>
+        <input id="title" name="title" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="author">Автор:</label>
+        <select id="author" name="author" onchange="authorChange()">
+            <option value="0">Новый</option>
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+        </select>
+        <input id="newAuthorName" name="newAuthorName" type="text"/>
+    </div>
+
+    <div class="row">
+        <label for="genre">Жанр:</label>
+        <select id="genre" name="genre" onchange="genreChange()">
+            <option value="0">Новый</option>
+            <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
+        </select>
+        <input id="newGenreName" name="newGenreName" type="text"/>
+    </div>
+
+    <div class="row">
+        <button onclick="saveBook('POST')">Сохранить</button>
+    </div>
+
+</body>
+<script src="book.js"></script>
+
+</html>
