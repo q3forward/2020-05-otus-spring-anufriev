@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Изменение комментария</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script src="common.js"></script>
+</head>
+<body onload="initPage()">
+
+    <h1>Изменение комментария:</h1>
+
+    <a th:href="@{/listComment(bookId=${bookId})}" href="/">Назад</a>
+
+    <div class="row">
+        <label for="text">Текст комментария:</label>
+    </div>
+    <div class="row">
+        <textarea id="text" name="text" rows="3" cols="40" th:text="${text}"></textarea>
+    </div>
+    <input id="id" name="id" type="text" th:value="${id}" hidden/>
+
+    <div class="row">
+        <button onclick="saveComment()">Сохранить</button>
+    </div>
+
+</body>
+
+<script>
+    let bookId;
+
+    function initPage() {
+        let id = document.getElementById("id").value;
+        callFetch("/api/comment/"+id, "GET", undefined, function(commentData){
+            if (commentData) {
+                bookId = commentData.book.id;
+                document.getElementById("text").textContent = commentData.text;
+            }
+        });
+    }
+
+    function saveComment() {
+        let id = document.getElementById("id").value
+        let commentObj = {
+            bookId,
+            text: document.getElementById("text").value
+        };
+        callFetch("/api/comment/"+id, "PUT", commentObj, function(res){
+            window.location.href = "/listComment?bookId="+bookId;
+        });
+    }
+</script>
+</html>
