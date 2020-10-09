@@ -1,0 +1,30 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      dda-auto: none
+    show-sql: true
+
+  liquibase:
+    enabled: true
+
+logging:
+  file:
+    name: actuator.log
+  level:
+    root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
