@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      dda-auto: none
+    show-sql: true
+
+  liquibase:
+    enabled: true
+
+logging:
+  file:
+    name: actuator.log
+  level:
+    root: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
