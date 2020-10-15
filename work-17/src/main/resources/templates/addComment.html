@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Добавление комментария</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script src="common.js"></script>
+</head>
+<body>
+
+    <h1>Добавление комментария:</h1>
+
+    <a th:href="@{/listComment(bookId=${bookId})}" href="/">Назад</a>
+
+    <div class="row">
+        <label for="text">Текст комментария:</label>
+    </div>
+    <div class="row">
+        <textarea id="text" name="text" rows="3" cols="40"></textarea>
+    </div>
+    <input id="book-id" name="book-id" type="text" th:value="${bookId}" hidden/>
+
+    <div class="row">
+        <button onclick="saveComment()">Сохранить</button>
+    </div>
+
+</body>
+<script>
+    function backClick() {
+        let bookId = document.getElementById("book-id").value;
+        window.location.href = "/addComment?bookId="+bookId;
+    }
+
+    function saveComment() {
+        let bookId = document.getElementById("book-id").value;
+        let commentObj = {
+            bookId,
+            text: document.getElementById("text").value
+        };
+        callFetch("/api/comment", "POST", commentObj, function(res){
+            window.location.href = "/listComment?bookId="+bookId;
+        });
+    }
+
+</script>
+</html>
