@@ -1,0 +1,56 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-data-genres
+      author: q3Forward
+      context: test
+      runOnChange: true
+      loadUpdateData:
+        primaryKey: id
+        file: csv/001-genres.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        encoding: UTF-8
+        tableName: genres
+
+  - changeSet:
+      id: 001-data-authors
+      author: q3Forward
+      context: test
+      runOnChange: true
+      loadUpdateData:
+        primaryKey: id
+        file: csv/001-authors.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        encoding: UTF-8
+        tableName: authors
+
+  - changeSet:
+      id: 001-data-books
+      author: q3Forward
+      context: test
+      runOnChange: true
+      loadUpdateData:
+        primaryKey: id
+        file: csv/001-books.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        encoding: UTF-8
+        tableName: books
+
+  - changeSet:
+      id: 001-data-comments
+      author: q3Forward
+      context: test
+      runOnChange: true
+      loadUpdateData:
+        primaryKey: id
+        file: csv/001-comments.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        encoding: UTF-8
+        tableName: comments
