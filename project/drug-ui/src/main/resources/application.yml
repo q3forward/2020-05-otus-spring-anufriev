@@ -1,0 +1,53 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: ui
+
+logging:
+  level:
+    root: INFO
+
+hystrix:
+  threadpool:
+    default:
+      coreSize: "20"
+      maxQueueSize: "500000"
+      keepAliveTimeMinutes: "2"
+      queueSizeRejectionThreshold: "500000"
+  dashboard:
+    proxy-stream-allow-list: "*"
+  command:
+    default:
+      fallback:
+        isolation:
+          semaphore:
+            maxConcurrentRequests: "20"
+      execution:
+        timeout:
+          enabled: "false"
+        isolation:
+          strategy: "THREAD"
+          thread:
+            timeoutInMilliseconds: "20000"
+
+ribbon:
+  ReadTimeout: 20000
+  ConnectTimeout: 20000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, info, hystrix.stream"
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true

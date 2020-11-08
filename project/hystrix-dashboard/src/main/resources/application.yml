@@ -1,0 +1,40 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: dashboard
+
+logging:
+  level:
+    root: INFO
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8001/eureka
+  instance:
+    instance-id: ${spring.application.name}:${server.port}
+    prefer-ip-address: true
+
+turbine:
+  app-config: ui, drug
+  cluster-name-expression: new String("default")
+
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: "*"
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

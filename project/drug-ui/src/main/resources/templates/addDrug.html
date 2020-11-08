@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Добавление препарата</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        #link, #description {
+            width: 450px;
+        }
+        #company {
+            width: 163px;
+        }
+
+        .ref {
+            margin-bottom: 30px;
+        }
+        .ref a {
+            margin-right: 20px;
+        }
+
+        .button {
+            font: 400 13.3333px Arial;;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border: 1px solid #333333;
+        }
+    </style>
+
+    <script src="common.js"></script>
+</head>
+<body onload="initData()">
+
+    <h1>Добавление препарата</h1>
+
+    <div class="ref">
+        <a class="button" th:href="@{/}" href="/">Назад</a>
+    </div>
+
+    <div class="row">
+        <label for="name">Название:</label>
+        <input id="name" name="name" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="company">Компания:</label>
+        <select id="company" name="company" onchange="companyChange()">
+            <option value="0">Новая</option>
+            <option th:each="company : ${companies}" th:value="${company.id}" th:text="${company.name}"></option>
+        </select>
+        <input id="newCompanyName" name="newCompanyName" type="text"/>
+    </div>
+
+    <div class="row">
+        <label for="phase">Фаза:</label>
+        <input id="phase" name="phase" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="area">Область применения:</label>
+        <input id="area" name="area" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="link">Ссылка:</label>
+        <input id="link" name="link" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="description">Описание:</label>
+        <textarea id="description" name="description" rows="3" cols="40" text=""></textarea>
+    </div>
+
+    <div class="row">
+        <button onclick="saveDrug('POST')">Сохранить</button>
+    </div>
+
+</body>
+<script src="drug.js"></script>
+
+</html>

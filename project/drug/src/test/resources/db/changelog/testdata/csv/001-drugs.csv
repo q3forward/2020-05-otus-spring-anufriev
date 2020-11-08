@@ -1,0 +1,4 @@
+id;company_id;name;area;phase;description;link
+100;100;Drug1;Area1;3;desc1;link1
+101;100;Drug2;Area2;2;desc2;link2
+102;101;Drug3;Area3;1;desc3;link3

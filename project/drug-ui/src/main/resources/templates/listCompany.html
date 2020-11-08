@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Компании</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .companies {
+            width: 65%
+        }
+
+        .companies th {
+            font-weight: bold;
+            font-size: 16px;
+            background-color: #829bad;
+            color: white;
+            padding: 5px;
+        }
+
+        .companies td {
+            border: 1px solid lightgray;
+            padding: 5px;
+            text-align: center;
+        }
+
+        .ref {
+            margin-bottom: 30px
+        }
+        .ref a {
+            margin-right: 20px;
+        }
+
+        .largeFont {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .button {
+            font: 400 13.3333px Arial;;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border: 1px solid #333333;
+        }
+    </style>
+    <script src="common.js"></script>
+</head>
+<body onload="initPage()">
+<h1 th:text="'Компании: '">Компании:</h1>
+<div class="ref">
+    <a class="button" th:href="@{/}" href="/">Назад</a>
+    <a class="button" th:href="@{/addCompany}" href="">Добавить</a>
+</div>
+
+<table class="companies">
+    <thead>
+    <tr>
+        <th>Наименование</th>
+        <th>Сокращение</th>
+        <th>Страна</th>
+        <th>Год основания</th>
+        <th colspan="3"></th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div id="no-data">
+    Нет данных
+</div>
+
+</body>
+
+<script type="text/javascript">
+
+    function deleteClick(companyId) {
+        callFetch("/api/company/"+companyId, "DELETE", undefined, function(){
+            loadCompanies();
+        });
+    };
+
+    function initPage() {
+        loadCompanies();
+    }
+
+    function refreshDrugs(company) {
+        callFetch("/api/refreshdata/"+company, "GET", undefined, function(){
+            alert("Успешно");
+        });
+    }
+
+    function loadCompanies() {
+        callFetch("/api/company","GET", undefined, function(companyList){
+            document.getElementsByClassName("companies")[0].hidden = (!companyList || companyList.length==0);
+            document.getElementById("no-data").hidden = (companyList && companyList.length>0);
+
+            var contentStr = "";
+            companyList.forEach(function (company) {
+                contentStr += `
+                    <tr>
+                        <td class="largeFont">
+                            <p><a href="${company.link}" target="_blank">${company.name}</a></p>
+                        </td>
+                        <td class="largeFont">${company.brief}</td>
+                        <td class="largeFont">${company.country}</td>
+                        <td class="largeFont">${company.year}</td>
+                        <td>
+                            <a href="editCompany?id=${company.id}">Изменить</a>
+                        </td>
+                        <td>
+                            <a onclick="deleteClick(${company.id})" href="#">Удалить</a>
+                        </td>
+                        <td>
+                            <a onclick="refreshDrugs('${company.brief}')" href="#">Выгрузить данные</a>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementsByTagName('tbody')[0].innerHTML = contentStr;
+        });
+    }
+</script>
+</html>

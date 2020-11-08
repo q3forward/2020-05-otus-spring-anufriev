@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0-001--company
+      author: Forward
+      createTable:
+        tableName: companies
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              startWith: 100
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_company
+          - column:
+              name: name
+              type: varchar(100)
+          - column:
+              name: brief
+              type: varchar(20)
+          - column:
+              name: country
+              type: varchar(30)
+          - column:
+              name: year
+              type: int
+          - column:
+              name: link
+              type: varchar(200)
+  - changeSet:
+      id: 1.0-002--drug
+      author: Forward
+      createTable:
+        tableName: drugs
+        columns:
+          - column:
+              name: id
+              type: bigint
+              autoIncrement: true
+              startWith: 100
+              constraints:
+                nullable: false
+                primaryKey: true
+                primaryKeyName: pk_drug
+          - column:
+              name: company_id
+              type: bigint
+              constraints:
+                nullable: false
+                foreignKeyName: fk_drug_companies
+                references: companies(id)
+          - column:
+              name: name
+              type: varchar(150)
+          - column:
+              name: area
+              type: varchar(150)
+          - column:
+              name: phase
+              type: varchar(40)
+          - column:
+              name: description
+              type: varchar(1000)
+          - column:
+              name: link
+              type: varchar(300)
