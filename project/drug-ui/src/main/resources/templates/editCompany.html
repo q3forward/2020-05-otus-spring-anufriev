@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Изменение компании</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .ref {
+            margin-bottom: 30px;
+        }
+        .ref a {
+            margin-right: 20px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        #link {
+            width: 450px;
+        }
+
+        .button {
+            font: 400 13.3333px Arial;;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border: 1px solid #333333;
+        }
+    </style>
+
+    <script src="common.js"></script>
+</head>
+<body onload="initPage()">
+
+    <h1>Изменение компании:</h1>
+
+    <div class="ref">
+        <a class="button" th:href="@{/listCompany}" href="/">Назад</a>
+    </div>
+
+    <div class="row">
+        <label for="name">Название:</label>
+        <input id="name" name="name" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="brief">Сокращение:</label>
+        <input id="brief" name="brief" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="country">Страна:</label>
+        <input id="country" name="country" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="year">Год:</label>
+        <input id="year" name="year" type="text" value=""/>
+    </div>
+
+    <div class="row">
+        <label for="link">Ссылка:</label>
+        <input id="link" name="link" type="text" value=""/>
+    </div>
+
+    <input id="company-id" type="text" readonly="readonly" th:value="${companyId}" hidden/>
+
+    <div class="row">
+        <button onclick="saveCompany()">Сохранить</button>
+    </div>
+
+</body>
+
+<script>
+    function initPage() {
+        let id = document.getElementById("company-id").value;
+        callFetch("/api/company/"+id, "GET", undefined, function(companyData){
+            if (companyData) {
+                document.getElementById("name").value = companyData.name;
+                document.getElementById("brief").value = companyData.brief;
+                document.getElementById("year").value = companyData.year;
+                document.getElementById("country").value = companyData.country;
+                document.getElementById("link").value = companyData.link;
+            }
+        });
+    }
+
+    function saveCompany() {
+        let id = document.getElementById("company-id").value
+        let companyObj = {
+            name: document.getElementById("name").value,
+            brief: document.getElementById("brief").value,
+            year: document.getElementById("year").value,
+            country: document.getElementById("country").value,
+            link: document.getElementById("link").value
+        };
+        callFetch("/api/company/"+id, "PUT", companyObj, function(res){
+            window.location.href = "/listCompany";
+        });
+    }
+</script>
+</html>

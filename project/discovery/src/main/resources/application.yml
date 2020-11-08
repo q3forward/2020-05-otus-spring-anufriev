@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: eureka
+
+server:
+  port: 8001
+
+logging:
+  level:
+    root: INFO
+
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://localhost:8001/eureka

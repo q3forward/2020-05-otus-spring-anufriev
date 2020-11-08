@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Список препаратов</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .drugs {
+            width: 85%;
+        }
+
+        .drugs, .drugs td {
+            padding: 5px;
+            text-align: center;
+        }
+
+        .ref {
+            margin-bottom: 30px;
+        }
+        .ref a {
+            margin-right: 20px;
+        }
+
+        .ready {
+            background-color: lightblue;
+        }
+        .phase3 {
+            background-color: lightgreen;
+        }
+        .phase2 {
+            background-color: lightgoldenrodyellow;
+        }
+        .phase1 {
+            background-color: lightpink;
+        }
+
+        .button {
+            font: 400 13.3333px Arial;;
+            text-decoration: none;
+            background-color: #EEEEEE;
+            color: #333333;
+            padding: 2px 6px 2px 6px;
+            border: 1px solid #333333;
+        }
+    </style>
+    <script src="common.js"></script>
+</head>
+<body onload="loadDrugs()">
+<h1>Препараты:</h1>
+<div class="ref">
+    <a class="button" th:href="@{/addDrug}" href="addDrug.html">Добавить препарат</a>
+    <a class="button" th:href="@{/listCompany}" href="listCompany.html">Компании</a>
+    <!--a onclick="import()" href="#">Импорт данных</a-->
+</div>
+<table id="drugs" class="drugs" hidden="true">
+    <thead>
+    <tr>
+        <th>Название</th>
+        <th>Компания</th>
+        <th>Фаза разработки</th>
+        <th>Область применения</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+<div id="no-data" hidden="true">
+    Нет данных
+</div>
+</body>
+
+<script type="text/javascript">
+    function deleteClick(drugId) {
+        callFetch("/api/drug/"+drugId,"DELETE", undefined, function(){
+            loadDrugs();
+        });
+    };
+
+    function loadDrugs() {
+        callFetch("/api/drug","GET", undefined, function(drugList){
+            var contentStr = "";
+            document.getElementById("no-data").hidden = (drugList && drugList.length>0);
+            document.getElementById("drugs").hidden = (!drugList || drugList.length==0);
+            drugList.forEach(function (drug) {
+                let company = drug.company;
+                let phaseClass = isNaN(drug.phase) ? "ready" : "phase"+drug.phase;
+                let descr = drug.description || "";
+                let link = drug.link || "";
+                contentStr += `
+                    <tr class="${phaseClass}">
+                        <td>
+                            <p title="${descr}"><a href="${link}" target="_blank">${drug.name}</a></p>
+                        </td>
+                        <td>${company.name}</td>
+                        <td>${drug.phase}</td>
+                        <td>${drug.area}</td>
+                        <td>
+                            <a href="editDrug?id=${drug.id}">Изменить</a>
+                        </td>
+                        <td>
+                            <a onclick="deleteClick(${drug.id})" href="#">Удалить</a>
+                        </td>
+                    </tr>
+                `;
+            });
+            document.getElementsByTagName('tbody')[0].innerHTML = contentStr;
+        });
+    }
+</script>
+</html>

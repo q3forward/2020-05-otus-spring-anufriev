@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-data-companies
+      author: q3Forward
+      context: test
+      runOnChange: true
+      loadUpdateData:
+        primaryKey: id
+        file: csv/001-companies.csv
+        relativeToChangelogFile: true
+        separator: ;
+        quotChar: '"'
+        encoding: UTF-8
+        tableName: companies
